@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 15:55:31 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/26 22:51:04 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/27 15:10:31 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,13 @@ static void				get_piece(t_data *data, int x, int y)
 	k = -1;
 	while (++k < y)
 	{
-		get_next_line(STDIN_FILENO, &line);
+		if (get_next_line(STDIN_FILENO, &line) == -1)
+			KEEPATITBRA;
+ft_dprintf(g_fd, "%s\n", line);
 		*(char **)ft_vecpush(vec) = line;
 	}
 	pc = vec->buff;
-	(void)test_fit(data, (const char **)pc, 0, 0);
+	test_fit(data, (const char **)pc, 0, 0);
 	ft_cleanup("A", pc);
 }
 
@@ -66,6 +68,7 @@ static void				fight(t_data *data)
 	{
 		if (ret == -1)
 			KEEPATITBRA;
+ft_dprintf(g_fd, "%s\n", line);
 		if (ft_isdigit(line[0]))
 			r_pos = up_map(data, line, r_pos);
 		else if (line[1] == 'i' && (r_pos = true))
@@ -81,12 +84,15 @@ int						main(void)
 	int			y;
 	int8_t		pl;
 
+	g_fd = open("/Users/nfinkel/42/filler/verbose", O_RDWR | O_TRUNC | O_CREAT, 0600);
 	while (get_next_line(STDIN_FILENO, &line) == -1)
 		KEEPATITBRA;
+ft_dprintf(g_fd, "%s\n", line);
 	pl = (line[10] == '1' ? 1 : 2);
 	ft_strdel(&line);
 	while (get_next_line(STDIN_FILENO, &line) == -1)
 		KEEPATITBRA;
+ft_dprintf(g_fd, "%s\n", line);
 	y = ft_atoi(line + 8);
 	x = ft_atoi(line + ft_intlen(y) + 9);
 	ft_strdel(&line);

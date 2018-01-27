@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 19:26:56 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/26 22:44:26 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/27 15:25:49 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ static inline int			up_coord(const t_data *restrict data, int x,
 	x = (x + data->plx >= data->mx ? 0 : x + 1);
 	*y = (!x ? *y + 1 : *y);
 	if (*y + data->ply > data->my)
-		ft_fatal("ONOES!!!!!!");
+		ft_printf("ONOES!");
 	GIMME(x);
 }
 
-int							test_fit(t_data *restrict data,
+void						test_fit(t_data *restrict data,
 							const char **restrict pc, int x, int y)
 {
 	bool		hit;
@@ -32,6 +32,8 @@ int							test_fit(t_data *restrict data,
 	int			p;
 	int8_t		anchor;
 
+	if (y + data->ply > data->my)
+		BYEZ;
 	hit = false;
 	anchor = 0;
 	k = -1;
@@ -47,6 +49,7 @@ int							test_fit(t_data *restrict data,
 		}
 	}
 	if ((size_t)(p * k) == data->plx * data->ply && anchor == 1)
-		GIMME(ft_printf("%d %d\n", y, x));
-	GIMME(test_fit(data, pc, up_coord((const t_data *)data, x, &y), y));
+		ft_printf("%d %d\n", y, x);
+	else
+		test_fit(data, pc, up_coord((const t_data *)data, x, &y), y);
 }

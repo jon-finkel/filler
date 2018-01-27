@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 16:00:25 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/26 22:44:34 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/27 13:56:40 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define FILLER_H
 
 #include "../libft/includes/libft.h"
+
+#include <fcntl.h>
+int		g_fd;
 
 typedef struct		s_data
 {
@@ -28,7 +31,7 @@ typedef struct		s_data
 }					t_data;
 
 int					pc_coord(char *line, int *x);
-int					test_fit(t_data *data, const char **pc, int x, int y);
+void				test_fit(t_data *data, const char **pc, int x, int y);
 bool				up_map(t_data *data, const char *line, bool r_pos);
 
 #endif
