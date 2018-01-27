@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 19:26:56 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/27 15:25:49 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/27 17:01:48 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 static inline int			up_coord(const t_data *restrict data, int x,
 							int *restrict y)
 {
-	x = (x + data->plx >= data->mx ? 0 : x + 1);
+	x = (x + data->plx == data->mx ? 0 : x + 1);
 	*y = (!x ? *y + 1 : *y);
 	if (*y + data->ply > data->my)
-		ft_printf("ONOES!");
+		ft_putendl("ONOES");
 	GIMME(x);
 }
 
@@ -37,10 +37,10 @@ void						test_fit(t_data *restrict data,
 	hit = false;
 	anchor = 0;
 	k = -1;
-	while (hit == false && pc[++k])
+	while (hit == false && (size_t)++k < data->ply)
 	{
 		p = -1;
-		while (pc[k][++p])
+		while ((size_t)++p < data->plx)
 		{
 			if (TILE == data->op && pc[k][p] == '*' && (hit = true))
 				IMOUTTAYR;

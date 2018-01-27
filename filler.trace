@@ -1,5 +1,5 @@
-seed = 558
-O: timedout
-./nfinkel.filler won
+seed = 9551
+O: error on input
+./players/abanlin.filler won
 Score:
-982AGAINST977
+61AGAINST92

@@ -6,34 +6,55 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 15:55:31 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/27 15:10:31 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/27 17:58:39 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/filler.h"
 
-static t_data			*init_data(t_data *data, int x, int y, int8_t pl)
+static t_data					*init_data(t_data *dat, int x, int y, int8_t pl)
 {
 	char			row[x + 1];
 	t_vector		vec_null = {NULL, 0, 0, sizeof(char *)};
 	t_vector		*vec = &vec_null;
 
-	while (!(data = (t_data *)ft_memalloc(sizeof(t_data))))
+	while (!(dat = (t_data *)ft_memalloc(sizeof(t_data))))
 		KEEPATITBRA;
-	data->self = (pl == 1 ? 'O' : 'X');
-	data->op = (pl == 1 ? 'X' : 'O');
-	data->mx = x;
-	data->my = y;
+	dat->self = (pl == 1 ? 'O' : 'X');
+	dat->op = (pl == 1 ? 'X' : 'O');
+	dat->mx = x;
+	dat->my = y;
 	ft_memset(row, '.', x);
 	row[x] = '\0';
 	while (y--)
 		if (!(*(char **)ft_vecpush(vec) = ft_strdup(row)))
 			ft_fatal("OMGNOEZ");
-	data->map = vec->buff;
+	dat->map = vec->buff;
+	GIMME(dat);
+}
+
+static inline t_data			*get_size(t_data *data, const char **pc)
+{
+	int			k;
+	int			p;
+
+	data->plx = 0;
+	data->ply = 0;
+	k = -1;
+	while (pc[++k])
+	{
+		p = -1;
+		while (pc[k][++p])
+			if (pc[k][p] == '*')
+			{
+				data->plx = MAX(data->plx, (size_t)(p + 1));
+				data->ply = MAX(data->ply, (size_t)(k + 1));
+			}
+	}
 	GIMME(data);
 }
 
-static void				get_piece(t_data *data, int x, int y)
+static void						get_piece(t_data *data, int y)
 {
 	char		*line;
 	char		**pc;
@@ -41,58 +62,50 @@ static void				get_piece(t_data *data, int x, int y)
 	t_vector		vec_null = {NULL, 0, 0, sizeof(char *)};
 	t_vector		*vec = &vec_null;
 
-	data->plx = x;
-	data->ply = y;
 	k = -1;
 	while (++k < y)
 	{
 		if (get_next_line(STDIN_FILENO, &line) == -1)
 			KEEPATITBRA;
-ft_dprintf(g_fd, "%s\n", line);
 		*(char **)ft_vecpush(vec) = line;
 	}
 	pc = vec->buff;
-	test_fit(data, (const char **)pc, 0, 0);
+	test_fit(get_size(data, (const char **)pc), (const char **)pc, 0, 0);
 	ft_cleanup("A", pc);
 }
 
-static void				fight(t_data *data)
+static void						fight(t_data *data)
 {
 	int8_t		r_pos;
 	char		*line;
 	int			ret;
-	int			y;
 
 	r_pos = true;
 	while ((ret = get_next_line(STDIN_FILENO, &line)))
 	{
 		if (ret == -1)
 			KEEPATITBRA;
-ft_dprintf(g_fd, "%s\n", line);
 		if (ft_isdigit(line[0]))
 			r_pos = up_map(data, line, r_pos);
 		else if (line[1] == 'i' && (r_pos = true))
-			get_piece(data, pc_coord(line, &y), y);
+			get_piece(data, ft_atoi(line + 6));
 		ft_strdel(&line);
 	}
 }
 
-int						main(void)
+int								main(void)
 {
 	char		*line;
 	int			x;
 	int			y;
 	int8_t		pl;
 
-	g_fd = open("/Users/nfinkel/42/filler/verbose", O_RDWR | O_TRUNC | O_CREAT, 0600);
 	while (get_next_line(STDIN_FILENO, &line) == -1)
 		KEEPATITBRA;
-ft_dprintf(g_fd, "%s\n", line);
 	pl = (line[10] == '1' ? 1 : 2);
 	ft_strdel(&line);
 	while (get_next_line(STDIN_FILENO, &line) == -1)
 		KEEPATITBRA;
-ft_dprintf(g_fd, "%s\n", line);
 	y = ft_atoi(line + 8);
 	x = ft_atoi(line + ft_intlen(y) + 9);
 	ft_strdel(&line);

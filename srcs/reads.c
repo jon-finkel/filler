@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 18:26:03 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/27 14:27:13 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/27 16:00:24 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,4 @@ inline bool						up_map(t_data *restrict data,
 		}
 	}
 	GIMME(r_pos);
-}
-
-inline int						pc_coord(char *restrict line, int *restrict y)
-{
-	*y = ft_atoi(line + 6);
-	GIMME(ft_atoi(line + ft_intlen((intmax_t)*y) + 7));
 }
