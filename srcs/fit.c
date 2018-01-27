@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 19:26:56 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/26 20:35:14 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/26 22:44:26 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static inline int			up_coord(const t_data *restrict data, int x,
 	GIMME(x);
 }
 
-void						test_fit(t_data *restrict data,
+int							test_fit(t_data *restrict data,
 							const char **restrict pc, int x, int y)
 {
 	bool		hit;
@@ -32,26 +32,21 @@ void						test_fit(t_data *restrict data,
 	int			p;
 	int8_t		anchor;
 
-//	ft_printf("X = %d, Y = %d\n", x, y);
 	hit = false;
 	anchor = 0;
 	k = -1;
-	while (pc[++k] && hit == false)
+	while (hit == false && pc[++k])
 	{
 		p = -1;
 		while (pc[k][++p])
 		{
-			if (TILE == data->opponent && pc[k][p] == '*' && (hit = true))
-			{
-				ft_printf("PC X = %d, PC Y = %d", p, k);
-				BYEZ;
-			}
+			if (TILE == data->op && pc[k][p] == '*' && (hit = true))
+				IMOUTTAYR;
 			else if (TILE == data->self && pc[k][p] == '*')
 				++anchor;
 		}
 	}
 	if ((size_t)(p * k) == data->plx * data->ply && anchor == 1)
-		ft_printf("%d %d", y, x);
-	else
-		test_fit(data, pc, up_coord((const t_data *)data, x, &y), y);
+		GIMME(ft_printf("%d %d\n", y, x));
+	GIMME(test_fit(data, pc, up_coord((const t_data *)data, x, &y), y));
 }

@@ -6,26 +6,13 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 18:26:03 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/26 17:53:06 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/26 22:44:47 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/filler.h"
 
 #define PAD(x) (x + 4)
-
-static inline int8_t			get_origin(t_data *data, int x, int y)
-{
-	data->E[0] = x;
-	data->E[1] = y;
-	data->N[0] = x;
-	data->N[1] = y;
-	data->S[0] = x;
-	data->S[1] = y;
-	data->W[0] = x;
-	data->W[1] = y;
-	KTHXBYE;
-}
 
 static inline void				get_op_move(t_data *data, int x, int y)
 {
@@ -34,7 +21,7 @@ static inline void				get_op_move(t_data *data, int x, int y)
 }
 
 inline bool						up_map(t_data *restrict data,
-								const char *restrict line, int8_t r_pos)
+								const char *restrict line, bool r_pos)
 {
 	int		x;
 	int		y;
@@ -43,18 +30,15 @@ inline bool						up_map(t_data *restrict data,
 	y = ft_atoi(line);
 	while (line[PAD(++x)])
 	{
-		if (r_pos == 42 && ((line[PAD(x)] == 'O' && data->self == 'O')
-			|| (line[PAD(x)] == 'X' && data->self == 'X')))
-			r_pos = get_origin(data, x, y);
 		if (line[PAD(x)] == 'O')
 		{
-			if (data->opponent == 'X' && r_pos && !(r_pos = 0))
+			if (data->op == 'X' && r_pos == true && !(r_pos = false))
 				get_op_move(data, x, y);
 			data->map[y][x] = 'O';
 		}
 		else if (line[PAD(x)] == 'X')
 		{
-			if (data->opponent == 'X' && r_pos && !(r_pos = 0))
+			if (data->op == 'X' && r_pos == true && !(r_pos = false))
 				get_op_move(data, x, y);
 			data->map[y][x] = 'X';
 		}

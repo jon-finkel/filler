@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 16:00:25 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/26 20:35:15 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/26 22:44:34 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,8 @@
 typedef struct		s_data
 {
 	char			**map;
-	int8_t			opponent;
+	int8_t			op;
 	int8_t			self;
-	short			E[2];
-	short			N[2];
-	short			S[2];
-	short			W[2];
 	short			op_pos[2];
 	size_t			mx;
 	size_t			my;
@@ -32,7 +28,7 @@ typedef struct		s_data
 }					t_data;
 
 int					pc_coord(char *line, int *x);
-void				test_fit(t_data *data, const char **pc, int x, int y);
-bool				up_map(t_data *data, const char *line, int8_t r_pos);
+int					test_fit(t_data *data, const char **pc, int x, int y);
+bool				up_map(t_data *data, const char *line, bool r_pos);
 
 #endif
