@@ -6,13 +6,13 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 19:26:56 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/27 17:01:48 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/28 19:08:06 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/filler.h"
 
-#define TILE data->map[y + k][x + p]
+#define TILE data->map[y + k - data->ploy][x + p - data->plox]
 
 static inline int			up_coord(const t_data *restrict data, int x,
 							int *restrict y)
@@ -36,10 +36,10 @@ void						test_fit(t_data *restrict data,
 		BYEZ;
 	hit = false;
 	anchor = 0;
-	k = -1;
+	k = data->ploy - 1;
 	while (hit == false && (size_t)++k < data->ply)
 	{
-		p = -1;
+		p = data->plox - 1;
 		while ((size_t)++p < data->plx)
 		{
 			if (TILE == data->op && pc[k][p] == '*' && (hit = true))
@@ -49,7 +49,7 @@ void						test_fit(t_data *restrict data,
 		}
 	}
 	if ((size_t)(p * k) == data->plx * data->ply && anchor == 1)
-		ft_printf("%d %d\n", y, x);
+		ft_printf("%d %d\n", y - data->ploy, x - data->plox);
 	else
 		test_fit(data, pc, up_coord((const t_data *)data, x, &y), y);
 }

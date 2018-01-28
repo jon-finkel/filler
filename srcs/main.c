@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 15:55:31 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/27 17:58:39 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/28 18:49:33 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,9 @@ static inline t_data			*get_size(t_data *data, const char **pc)
 		while (pc[k][++p])
 			if (pc[k][p] == '*')
 			{
+				if (data->ploy == INT_MAX)
+					data->ploy = k;
+				data->plox = MIN(data->plox, p);
 				data->plx = MAX(data->plx, (size_t)(p + 1));
 				data->ply = MAX(data->ply, (size_t)(k + 1));
 			}
@@ -70,6 +73,8 @@ static void						get_piece(t_data *data, int y)
 		*(char **)ft_vecpush(vec) = line;
 	}
 	pc = vec->buff;
+	data->plox = INT_MAX;
+	data->ploy = INT_MAX;
 	test_fit(get_size(data, (const char **)pc), (const char **)pc, 0, 0);
 	ft_cleanup("A", pc);
 }
