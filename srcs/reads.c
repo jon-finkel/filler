@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 18:26:03 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/27 16:00:24 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/28 19:42:09 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,15 @@ inline bool						up_map(t_data *restrict data,
 	{
 		if (line[PAD(x)] == 'O')
 		{
-			if (data->op == 'O' && r_pos == true && !(r_pos = false))
+			if (r_pos == true && data->op == 'O' && data->map[y][x] == '.'
+				&& !(r_pos = false))
 				get_op_move(data, x, y);
 			data->map[y][x] = 'O';
 		}
 		else if (line[PAD(x)] == 'X')
 		{
-			if (data->op == 'X' && r_pos == true && !(r_pos = false))
+			if (r_pos == true && data->op == 'X' && data->map[y][x] == '.'
+				&& !(r_pos = false))
 				get_op_move(data, x, y);
 			data->map[y][x] = 'X';
 		}

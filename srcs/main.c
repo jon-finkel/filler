@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 15:55:31 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/28 18:49:33 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/28 19:37:05 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ int								main(void)
 	int			y;
 	int8_t		pl;
 
+	g_fd = open("/Users/jon/42/filler/verbose", O_CREAT | O_TRUNC | O_RDWR, 0600);
 	while (get_next_line(STDIN_FILENO, &line) == -1)
 		KEEPATITBRA;
 	pl = (line[10] == '1' ? 1 : 2);

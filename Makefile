@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/25 23:01:23 by nfinkel           #+#    #+#              #
-#    Updated: 2018/01/26 19:26:35 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/01/28 19:50:48 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,8 @@ all: $(NAME)
 
 $(NAME): libft $(OBJECTS)
 	@$(CC) $(DEBUG) $(FLAGS) $(O_FLAG) $(patsubst %.c,$(OBJDIR)%.o,$(notdir $(SRCS))) -L $(LIBFTDIR) -lft -lncurses -o $@
-	@printf  "\033[32m\033[1mCompiling \033[0m\033[91m$(NAME)\033[0m:%s\033[32m[✔]\033[0m\n"
+	@printf $(DEBUG)
+	@printf "\033[32m\033[1mCompiling \033[0m\033[91m$(NAME)\033[0m:%s\033[32m[✔]\033[0m\n"
 
 $(OBJECTS): | $(OBJDIR)
 
@@ -62,14 +63,14 @@ $(OBJDIR):
 	@mkdir -p $@
 
 $(OBJDIR)%.o: %.c
-	@printf  "\r%-25s\033[32m[$<]\033[0m\n" "$(NAME):"
+	@printf "\r%-25s\033[32m[$<]\033[0m\n" "$(NAME):"
 	@$(CC) $(VERSION) $(DEBUG)$(FLAGS)$(O_FLAG) $(HEADERS) -c $< -o $@
 	@printf "\033[A\033[2K"
 
 clean:
 	@/bin/rm -rf $(OBJDIR)
 #	@$(MAKE) clean -C $(LIBFTDIR)
-	@printf  "\033[1:32m%-25s\033[0m\033[32m[✔]\033[0m\n" "Cleaning object files:"
+	@printf "\033[1:32m%-25s\033[0m\033[32m[✔]\033[0m\n" "Cleaning object files:"
 
 debug: CC := clang
 debug: DEBUG := -g3 -fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined 
@@ -78,7 +79,7 @@ debug: fclean all
 fclean: clean
 	@/bin/rm -f $(NAME)
 #	@$(MAKE) fclean -C $(LIBFTDIR)
-	@printf  "\033[1:32mCleaning \033[0m\033[91m${NAME:.a=}\033[0m:%-1s\033[32m[✔]\033[0m\n"
+	@printf "\033[1:32mCleaning \033[0m\033[91m${NAME:.a=}\033[0m:%-1s\033[32m[✔]\033[0m\n"
 
 libft:
 	@$(MAKE) -C $(LIBFTDIR)

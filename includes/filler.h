@@ -6,14 +6,14 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 16:00:25 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/28 18:38:53 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/28 19:34:11 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FILLER_H
 # define FILLER_H
 
-#include "../libft/includes/libft.h"
+# include "../libft/includes/libft.h"
 
 typedef struct		s_data
 {
@@ -28,6 +28,9 @@ typedef struct		s_data
 	int				ploy;
 	size_t			ply;
 }					t_data;
+
+int g_fd;
+#include <fcntl.h>
 
 void				test_fit(t_data *data, const char **pc, int x, int y);
 bool				up_map(t_data *data, const char *line, bool r_pos);
