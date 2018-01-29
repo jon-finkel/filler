@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 16:00:25 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/28 19:34:11 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/29 04:27:39 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,17 @@ typedef struct		s_data
 	size_t			ply;
 }					t_data;
 
+typedef struct		s_mov
+{
+	char			**pc;
+	int				x;
+	int				y;
+}					t_mov;
+
 int g_fd;
 #include <fcntl.h>
 
-void				test_fit(t_data *data, const char **pc, int x, int y);
+void				test_fit(t_data *data, t_mov *mov, int x, int y);
 bool				up_map(t_data *data, const char *line, bool r_pos);
 
 #endif

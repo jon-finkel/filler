@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 15:55:31 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/28 19:37:05 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/29 06:32:12 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,11 @@ static inline t_data			*get_size(t_data *data, const char **pc)
 	GIMME(data);
 }
 
-static void						get_piece(t_data *data, int y)
+static void						get_piece(t_data *restrict data,
+								t_mov *restrict mov, int y)
 {
-	char		*line;
-	char		**pc;
-	int			k;
+	char			*line;
+	int				k;
 	t_vector		vec_null = {NULL, 0, 0, sizeof(char *)};
 	t_vector		*vec = &vec_null;
 
@@ -72,11 +72,13 @@ static void						get_piece(t_data *data, int y)
 			KEEPATITBRA;
 		*(char **)ft_vecpush(vec) = line;
 	}
-	pc = vec->buff;
+	mov->pc = vec->buff;
+	mov->x = 0;
+	mov->y = 0;
 	data->plox = INT_MAX;
 	data->ploy = INT_MAX;
-	test_fit(get_size(data, (const char **)pc), (const char **)pc, 0, 0);
-	ft_cleanup("A", pc);
+	test_fit(get_size(data, (const char **)mov->pc), mov, 0, 0);
+	ft_vecclear(vec, (t_del)&ft_memdel);
 }
 
 static void						fight(t_data *data)
@@ -84,6 +86,7 @@ static void						fight(t_data *data)
 	int8_t		r_pos;
 	char		*line;
 	int			ret;
+	t_mov		mov;
 
 	r_pos = true;
 	while ((ret = get_next_line(STDIN_FILENO, &line)))
@@ -93,7 +96,7 @@ static void						fight(t_data *data)
 		if (ft_isdigit(line[0]))
 			r_pos = up_map(data, line, r_pos);
 		else if (line[1] == 'i' && (r_pos = true))
-			get_piece(data, ft_atoi(line + 6));
+			get_piece(data, &mov, ft_atoi(line + 6));
 		ft_strdel(&line);
 	}
 }

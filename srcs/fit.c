@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 19:26:56 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/28 19:08:06 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/29 04:32:44 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ static inline int			up_coord(const t_data *restrict data, int x,
 	x = (x + data->plx == data->mx ? 0 : x + 1);
 	*y = (!x ? *y + 1 : *y);
 	if (*y + data->ply > data->my)
-		ft_putendl("ONOES");
+		ft_putendl("0 0");
 	GIMME(x);
 }
 
-void						test_fit(t_data *restrict data,
-							const char **restrict pc, int x, int y)
+void						test_fit(t_data *restrict data, t_mov *restrict mov,
+							int x, int y)
 {
 	bool		hit;
 	int			k;
@@ -42,14 +42,16 @@ void						test_fit(t_data *restrict data,
 		p = data->plox - 1;
 		while ((size_t)++p < data->plx)
 		{
-			if (TILE == data->op && pc[k][p] == '*' && (hit = true))
+			if (TILE == '.')
+				KEEPATITBRA;
+			else if (TILE == data->op && mov->pc[k][p] == '*' && (hit = true))
 				IMOUTTAYR;
-			else if (TILE == data->self && pc[k][p] == '*')
+			else if (TILE == data->self && mov->pc[k][p] == '*')
 				++anchor;
 		}
 	}
-	if ((size_t)(p * k) == data->plx * data->ply && anchor == 1)
+	if (hit == false && anchor == 1 && (size_t)(p * k) == data->plx * data->ply)
 		ft_printf("%d %d\n", y - data->ploy, x - data->plox);
 	else
-		test_fit(data, pc, up_coord((const t_data *)data, x, &y), y);
+		test_fit(data, mov, up_coord((const t_data *)data, x, &y), y);
 }
