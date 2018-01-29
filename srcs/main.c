@@ -6,18 +6,20 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 15:55:31 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/29 06:32:12 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/29 18:15:25 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/filler.h"
 
-static t_data					*init_data(t_data *dat, int x, int y, int8_t pl)
+static inline t_data			*init_data(t_data *dat, int x, int y, int8_t pl)
 {
 	char			row[x + 1];
-	t_vector		vec_null = {NULL, 0, 0, sizeof(char *)};
-	t_vector		*vec = &vec_null;
+	t_vector		*vec;
 
+	while (!(vec = (t_vector *)ft_memalloc(sizeof(t_vector))))
+		KEEPATITBRA;
+	vec->data_size = sizeof(char *);
 	while (!(dat = (t_data *)ft_memalloc(sizeof(t_data))))
 		KEEPATITBRA;
 	dat->self = (pl == 1 ? 'O' : 'X');
@@ -30,6 +32,7 @@ static t_data					*init_data(t_data *dat, int x, int y, int8_t pl)
 		if (!(*(char **)ft_vecpush(vec) = ft_strdup(row)))
 			ft_fatal("OMGNOEZ");
 	dat->map = vec->buff;
+	free(vec);
 	GIMME(dat);
 }
 
@@ -62,9 +65,11 @@ static void						get_piece(t_data *restrict data,
 {
 	char			*line;
 	int				k;
-	t_vector		vec_null = {NULL, 0, 0, sizeof(char *)};
-	t_vector		*vec = &vec_null;
+	t_vector		*vec;
 
+	while (!(vec = (t_vector *)ft_memalloc(sizeof(t_vector))))
+		KEEPATITBRA;
+	vec->data_size = sizeof(char *);
 	k = -1;
 	while (++k < y)
 	{
@@ -72,16 +77,18 @@ static void						get_piece(t_data *restrict data,
 			KEEPATITBRA;
 		*(char **)ft_vecpush(vec) = line;
 	}
+	ft_memset(mov, '\0', sizeof(t_mov));
 	mov->pc = vec->buff;
-	mov->x = 0;
-	mov->y = 0;
+	mov->advx = INT_MAX;
+	mov->advy = INT_MAX;
 	data->plox = INT_MAX;
 	data->ploy = INT_MAX;
 	test_fit(get_size(data, (const char **)mov->pc), mov, 0, 0);
-	ft_vecclear(vec, (t_del)&ft_memdel);
+	ft_vecclear(vec, (t_del)(&ft_memdel));
+	free(vec);
 }
 
-static void						fight(t_data *data)
+static inline void				fight(t_data *data)
 {
 	int8_t		r_pos;
 	char		*line;
@@ -108,7 +115,7 @@ int								main(void)
 	int			y;
 	int8_t		pl;
 
-	g_fd = open("/Users/jon/42/filler/verbose", O_CREAT | O_TRUNC | O_RDWR, 0600);
+	g_fd = open("/Users/nfinkel/42/filler/verbose", O_CREAT | O_TRUNC | O_RDWR, 0600);
 	while (get_next_line(STDIN_FILENO, &line) == -1)
 		KEEPATITBRA;
 	pl = (line[10] == '1' ? 1 : 2);

@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 16:00:25 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/29 04:27:39 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/29 16:52:24 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,22 @@ typedef struct		s_data
 	char			**map;
 	int8_t			op;
 	int8_t			self;
-	short			op_pos[2];
 	size_t			mx;
 	size_t			my;
 	int				plox;
 	size_t			plx;
 	int				ploy;
 	size_t			ply;
+	short			op_pos[2];
 }					t_data;
 
 typedef struct		s_mov
 {
+	bool			hit;
 	char			**pc;
+	int8_t			anchor;
+	int				advx;
+	int				advy;
 	int				x;
 	int				y;
 }					t_mov;
