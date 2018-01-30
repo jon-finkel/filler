@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 15:55:31 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/29 18:15:25 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/30 16:51:42 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,9 @@ static inline t_data			*init_data(t_data *dat, int x, int y, int8_t pl)
 	char			row[x + 1];
 	t_vector		*vec;
 
-	while (!(vec = (t_vector *)ft_memalloc(sizeof(t_vector))))
-		KEEPATITBRA;
+	KEEPATITBRA(vec = (t_vector *)ft_memalloc(sizeof(t_vector)));
 	vec->data_size = sizeof(char *);
-	while (!(dat = (t_data *)ft_memalloc(sizeof(t_data))))
-		KEEPATITBRA;
+	KEEPATITBRA(dat = (t_data *)ft_memalloc(sizeof(t_data)));
 	dat->self = (pl == 1 ? 'O' : 'X');
 	dat->op = (pl == 1 ? 'X' : 'O');
 	dat->mx = x;
@@ -29,8 +27,7 @@ static inline t_data			*init_data(t_data *dat, int x, int y, int8_t pl)
 	ft_memset(row, '.', x);
 	row[x] = '\0';
 	while (y--)
-		if (!(*(char **)ft_vecpush(vec) = ft_strdup(row)))
-			ft_fatal("OMGNOEZ");
+		KEEPATITBRA(*(char **)ft_vecpush(vec) = ft_strdup(row));
 	dat->map = vec->buff;
 	free(vec);
 	GIMME(dat);
@@ -65,25 +62,25 @@ static void						get_piece(t_data *restrict data,
 {
 	char			*line;
 	int				k;
+	t_crd			crd;
 	t_vector		*vec;
 
-	while (!(vec = (t_vector *)ft_memalloc(sizeof(t_vector))))
-		KEEPATITBRA;
+	KEEPATITBRA(vec = (t_vector *)ft_memalloc(sizeof(t_vector)));
 	vec->data_size = sizeof(char *);
 	k = -1;
 	while (++k < y)
 	{
 		if (get_next_line(STDIN_FILENO, &line) == -1)
-			KEEPATITBRA;
-		*(char **)ft_vecpush(vec) = line;
+			continue ;
+		KEEPATITBRA(*(char **)ft_vecpush(vec) = line);
 	}
 	ft_memset(mov, '\0', sizeof(t_mov));
 	mov->pc = vec->buff;
-	mov->advx = INT_MAX;
-	mov->advy = INT_MAX;
 	data->plox = INT_MAX;
 	data->ploy = INT_MAX;
-	test_fit(get_size(data, (const char **)mov->pc), mov, 0, 0);
+	crd.x = 0;
+	crd.y = 0;
+	test_fit(get_size(strat_map(data), (const char **)mov->pc), mov, &crd);
 	ft_vecclear(vec, (t_del)(&ft_memdel));
 	free(vec);
 }
@@ -99,7 +96,7 @@ static inline void				fight(t_data *data)
 	while ((ret = get_next_line(STDIN_FILENO, &line)))
 	{
 		if (ret == -1)
-			KEEPATITBRA;
+			continue ;
 		if (ft_isdigit(line[0]))
 			r_pos = up_map(data, line, r_pos);
 		else if (line[1] == 'i' && (r_pos = true))
@@ -116,12 +113,10 @@ int								main(void)
 	int8_t		pl;
 
 	g_fd = open("/Users/nfinkel/42/filler/verbose", O_CREAT | O_TRUNC | O_RDWR, 0600);
-	while (get_next_line(STDIN_FILENO, &line) == -1)
-		KEEPATITBRA;
+	KEEPATITBRA(get_next_line(STDIN_FILENO, &line));
 	pl = (line[10] == '1' ? 1 : 2);
 	ft_strdel(&line);
-	while (get_next_line(STDIN_FILENO, &line) == -1)
-		KEEPATITBRA;
+	KEEPATITBRA(get_next_line(STDIN_FILENO, &line));
 	y = ft_atoi(line + 8);
 	x = ft_atoi(line + ft_intlen(y) + 9);
 	ft_strdel(&line);

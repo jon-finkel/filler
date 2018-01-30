@@ -6,69 +6,90 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 19:26:56 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/29 19:37:10 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/30 16:46:31 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/filler.h"
 
-#define TILE data->map[y + k - data->ploy][x + p - data->plox]
+#define TICX (crd->x + crd->p)
+#define TICY (crd->y + crd->k)
+#define TILE data->map[TICY - data->ploy][TICX - data->plox]
 
-static inline int			up_coord(const t_data *restrict data,
-							const t_mov *restrict mov, int x, int *restrict y)
+static inline t_crd			*up_coord(const t_data *restrict data,
+							const t_mov *restrict mov, t_crd *restrict crd)
 {
-	x = (x + data->plx == data->mx ? 0 : x + 1);
-	*y = (!x ? *y + 1 : *y);
-	if (*y + data->ply > data->my)
+	if (!(crd->x = (crd->x + data->plx == data->mx ? 0 : crd->x + 1)))
+		++crd->y;
+	if (crd->y + data->ply > data->my)
 		ft_printf("%d %d\n", mov->y, mov->x);
-	GIMME(x);
+	GIMME(crd);
 }
 
-static inline void			up_move(const t_data *restrict data,
-							t_mov *restrict mov, const int x, const int y)
+static inline double		get_reach(const t_data *restrict data,
+							const t_crd *restrict crd, const int x, const int y)
 {
-	int		ax;
-	int		ay;
+	int			a;
+	int			b;
 
-	ax = x + ABS(data->plx - data->op_pos[0]);
-	ay = y + ABS(data->ply - data->op_pos[1]);
-	ft_dprintf(g_fd, "AX = %d, AY = %d\n", ax, ay);
-	if (ax < mov->advx || ay < mov->advy)
+	a = crd->x + crd->p - data->plox;
+	b = crd->y + crd->k - data->ploy;
+	GIMME(0.1);
+}
+
+static inline void			check_move(const t_data *restrict data,
+							t_mov *restrict mov, t_crd *restrict crd)
+{
+	double		reach;
+	int			k;
+	int			p;
+
+	if (TILE == data->op && mov->pc[crd->k][crd->p] == '*' && (mov->hit = true))
+		BYEZ;
+	else if (TILE == data->self && mov->pc[crd->k][crd->p] == '*')
+		if ((mov->anchor += 1) > 1)
+			BYEZ;
+	if (TILE == '*' && ++mov->contact)
+		BYEZ;
+	k = -1;
+	while (data->map[++k])
 	{
-		mov->x = x - data->plox;
-		mov->y = y - data->ploy;
-		mov->advx = MIN(ax, mov->advx);
-		mov->advy = MIN(ay, mov->advy);
+		p = -1;
+		while (data->map[k][++p])
+			if (data->map[k][p] == '*'
+				&& (reach = get_reach(data, crd, p, k)) > mov->reach)
+				mov->reach = reach;
+	}
+}
+
+static inline void			mv_prio(t_data *restrict data, t_mov *restrict mov,
+							t_crd *restrict crd)
+{
+	if (mov->contact > mov->prio || mov->reach > mov->prio)
+	{
+		mov->prio = (mov->contact ? mov->contact : mov->reach);
+		mov->x = crd->x - data->plox;
+		mov->y = crd->y - data->ploy;
 	}
 }
 
 void						test_fit(t_data *restrict data, t_mov *restrict mov,
-							int x, int y)
+							t_crd *restrict crd)
 {
-	int			k;
-	int			p;
-
-	if (y + data->ply > data->my)
+	if (crd->y + data->ply > data->my)
 		BYEZ;
 	mov->hit = false;
 	mov->anchor = 0;
-	k = data->ploy - 1;
-	while (mov->hit == false && (size_t)++k < data->ply)
+	mov->contact = 0;
+	crd->k = data->ploy - 1;
+	while (mov->anchor < 2 && mov->hit == false && (size_t)++crd->k < data->ply)
 	{
-		p = data->plox - 1;
-		while ((size_t)++p < data->plx)
-		{
-			if (TILE == '.')
-				KEEPATITBRA;
-			else if (TILE == data->op && mov->pc[k][p] == '*' && (mov->hit = true))
-				IMOUTTAYR;
-			else if (TILE == data->self && mov->pc[k][p] == '*')
-				++mov->anchor;
-		}
+		crd->p = data->plox - 1;
+		while (mov->anchor < 2 && (size_t)++crd->p < data->plx)
+			check_move(data, mov, crd);
 	}
 	if (mov->hit == false && mov->anchor == 1
-		&& (size_t)(p * k) == data->plx * data->ply)
-		up_move(data, mov, x, y);
-	test_fit(data, mov, up_coord((const t_data *)data, (const t_mov *)mov, x,
-		&y), y);
+		&& (size_t)(crd->p * crd->k) == data->plx * data->ply)
+		mv_prio(data, mov, crd);
+	test_fit(data, mov, up_coord(data, mov, crd));
 }
