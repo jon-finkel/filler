@@ -6,15 +6,16 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 19:26:56 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/30 16:46:31 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/30 23:09:30 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/filler.h"
 
-#define TICX (crd->x + crd->p)
-#define TICY (crd->y + crd->k)
-#define TILE data->map[TICY - data->ploy][TICX - data->plox]
+#define E_CLEAR (mov->anchor < 2 && mov->hit == false)
+#define TICX (crd->x + crd->p - data->plox)
+#define TICY (crd->y + crd->k - data->ploy)
+#define TILE data->map[TICY][TICX]
 
 static inline t_crd			*up_coord(const t_data *restrict data,
 							const t_mov *restrict mov, t_crd *restrict crd)
@@ -26,48 +27,25 @@ static inline t_crd			*up_coord(const t_data *restrict data,
 	GIMME(crd);
 }
 
-static inline double		get_reach(const t_data *restrict data,
-							const t_crd *restrict crd, const int x, const int y)
-{
-	int			a;
-	int			b;
-
-	a = crd->x + crd->p - data->plox;
-	b = crd->y + crd->k - data->ploy;
-	GIMME(0.1);
-}
-
 static inline void			check_move(const t_data *restrict data,
 							t_mov *restrict mov, t_crd *restrict crd)
 {
-	double		reach;
-	int			k;
-	int			p;
-
 	if (TILE == data->op && mov->pc[crd->k][crd->p] == '*' && (mov->hit = true))
 		BYEZ;
 	else if (TILE == data->self && mov->pc[crd->k][crd->p] == '*')
 		if ((mov->anchor += 1) > 1)
 			BYEZ;
-	if (TILE == '*' && ++mov->contact)
-		BYEZ;
-	k = -1;
-	while (data->map[++k])
-	{
-		p = -1;
-		while (data->map[k][++p])
-			if (data->map[k][p] == '*'
-				&& (reach = get_reach(data, crd, p, k)) > mov->reach)
-				mov->reach = reach;
-	}
+	if (mov->pc[crd->k][crd->p] == '*')
+		if (TILE == '*' && ++mov->contact)
+			BYEZ;
 }
 
 static inline void			mv_prio(t_data *restrict data, t_mov *restrict mov,
 							t_crd *restrict crd)
 {
-	if (mov->contact > mov->prio || mov->reach > mov->prio)
+	if (mov->contact >= mov->prio)
 	{
-		mov->prio = (mov->contact ? mov->contact : mov->reach);
+		mov->prio = mov->contact;
 		mov->x = crd->x - data->plox;
 		mov->y = crd->y - data->ploy;
 	}
@@ -81,15 +59,15 @@ void						test_fit(t_data *restrict data, t_mov *restrict mov,
 	mov->hit = false;
 	mov->anchor = 0;
 	mov->contact = 0;
+	mov->reach = 0;
 	crd->k = data->ploy - 1;
-	while (mov->anchor < 2 && mov->hit == false && (size_t)++crd->k < data->ply)
+	while (E_CLEAR && ++crd->k < data->ply)
 	{
 		crd->p = data->plox - 1;
-		while (mov->anchor < 2 && (size_t)++crd->p < data->plx)
+		while (E_CLEAR && ++crd->p < data->plx)
 			check_move(data, mov, crd);
 	}
-	if (mov->hit == false && mov->anchor == 1
-		&& (size_t)(crd->p * crd->k) == data->plx * data->ply)
+	if (mov->hit == false && mov->anchor == 1)
 		mv_prio(data, mov, crd);
 	test_fit(data, mov, up_coord(data, mov, crd));
 }

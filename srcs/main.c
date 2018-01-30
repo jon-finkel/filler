@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 15:55:31 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/30 16:51:42 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/30 22:50:37 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ static inline t_data			*get_size(t_data *data, const char **pc)
 				if (data->ploy == INT_MAX)
 					data->ploy = k;
 				data->plox = MIN(data->plox, p);
-				data->plx = MAX(data->plx, (size_t)(p + 1));
-				data->ply = MAX(data->ply, (size_t)(k + 1));
+				data->plx = MAX(data->plx, p + 1);
+				data->ply = MAX(data->ply, k + 1);
 			}
 	}
 	GIMME(data);
@@ -76,6 +76,7 @@ static void						get_piece(t_data *restrict data,
 	}
 	ft_memset(mov, '\0', sizeof(t_mov));
 	mov->pc = vec->buff;
+	mov->rprio = INT_MAX;
 	data->plox = INT_MAX;
 	data->ploy = INT_MAX;
 	crd.x = 0;
