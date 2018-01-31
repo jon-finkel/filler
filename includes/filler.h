@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 16:00:25 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/30 22:49:51 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/31 00:05:57 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,6 @@ typedef struct		s_mov
 	int				x;
 	int				y;
 }					t_mov;
-
-int g_fd;
-#include <fcntl.h>
 
 t_data				*strat_map(t_data *data);
 void				test_fit(t_data *data, t_mov *mov, struct s_crd *crd);

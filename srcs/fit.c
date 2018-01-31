@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 19:26:56 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/30 23:09:30 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/30 23:53:33 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,27 @@ static inline void			check_move(const t_data *restrict data,
 		if ((mov->anchor += 1) > 1)
 			BYEZ;
 	if (mov->pc[crd->k][crd->p] == '*')
+	{
 		if (TILE == '*' && ++mov->contact)
 			BYEZ;
+		else if (!mov->contact)
+			mov->reach = POW2(TICX - data->op_pos[0]) +\
+				POW2(TICY - data->op_pos[1]);
+	}
 }
 
 static inline void			mv_prio(t_data *restrict data, t_mov *restrict mov,
 							t_crd *restrict crd)
 {
-	if (mov->contact >= mov->prio)
+	if (mov->contact > mov->prio)
 	{
 		mov->prio = mov->contact;
+		mov->x = crd->x - data->plox;
+		mov->y = crd->y - data->ploy;
+	}
+	else if (!mov->prio && mov->rprio > mov->reach)
+	{
+		mov->rprio = mov->reach;
 		mov->x = crd->x - data->plox;
 		mov->y = crd->y - data->ploy;
 	}
