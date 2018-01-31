@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2017/12/25 23:01:23 by nfinkel           #+#    #+#              #
-#    Updated: 2018/01/31 00:12:33 by nfinkel          ###   ########.fr        #
+#    Created: 2018/01/31 00:09:49 by nfinkel           #+#    #+#              #
+#    Updated: 2018/01/31 00:15:33 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@
 OS :=						$(shell uname)
 
 #	Output
-NAME :=						nfinkel.filler
+NAME :=						gui
 
 #	Compiler
 CC :=						gcc
@@ -32,13 +32,14 @@ HEADERS :=					-I ./includes/
 O_FLAG :=					-O2
 
 #	Directories
-LIBFTDIR :=					./libft/
+LIBFTDIR :=					./../libft/
+MINILIBX :=					./minilibx_macos/
 OBJDIR :=					./build/
 
 SRCS_DIR :=					./srcs/
 
 #	Sources
-SRC +=						main.c fit.c reads.c surr.c
+SRC +=						main.c
 
 OBJECTS =					$(patsubst %.c,$(OBJDIR)%.o,$(SRCS))
 
@@ -53,8 +54,8 @@ vpath %.c $(SRCS_DIR)
 all: $(NAME)
 
 $(NAME): libft $(OBJECTS)
-	@$(CC) $(DEBUG) $(FLAGS) $(O_FLAG) $(patsubst %.c,$(OBJDIR)%.o,$(notdir $(SRCS))) -L $(LIBFTDIR) -lft -o $@
-	@printf "\033[32m\033[1mCompiling \033[0m\033[91m$(NAME)\033[0m:%s\033[32m[✔]\033[0m\n"
+	@$(CC) $(DEBUG) $(FLAGS) $(O_FLAG) $(patsubst %.c,$(OBJDIR)%.o,$(notdir $(SRCS))) -L $(LIBFTDIR) -lft -L $(MINILIBX) -lmlx -framework OpenGL -framework AppKit -o $@
+	@printf "\033[32m\033[1mCompiling \033[0m\033[91m$(NAME)\033[0m:%-11s\033[32m[✔]\033[0m\n"
 
 $(OBJECTS): | $(OBJDIR)
 
@@ -78,7 +79,7 @@ debug: fclean all
 fclean: clean
 	@/bin/rm -f $(NAME)
 #	@$(MAKE) fclean -C $(LIBFTDIR)
-	@printf "\033[1:32mCleaning \033[0m\033[91m${NAME:.a=}\033[0m:%-1s\033[32m[✔]\033[0m\n"
+	@printf "\033[1:32mCleaning \033[0m\033[91m${NAME:.a=}\033[0m:%-12s\033[32m[✔]\033[0m\n"
 
 libft:
 	@$(MAKE) -C $(LIBFTDIR)
