@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 19:26:56 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/30 23:53:33 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/01/31 14:17:37 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@
 static inline t_crd			*up_coord(const t_data *restrict data,
 							const t_mov *restrict mov, t_crd *restrict crd)
 {
-	if (!(crd->x = (crd->x + data->plx == data->mx ? 0 : crd->x + 1)))
+	crd->x = (crd->x + data->plx - data->plox == data->mx ? 0 : crd->x + 1);
+	if (!crd->x)
 		++crd->y;
-	if (crd->y + data->ply > data->my)
+	if (crd->y + data->ply - data->ploy > data->my)
 		ft_printf("%d %d\n", mov->y, mov->x);
 	GIMME(crd);
 }
@@ -45,27 +46,10 @@ static inline void			check_move(const t_data *restrict data,
 	}
 }
 
-static inline void			mv_prio(t_data *restrict data, t_mov *restrict mov,
-							t_crd *restrict crd)
-{
-	if (mov->contact > mov->prio)
-	{
-		mov->prio = mov->contact;
-		mov->x = crd->x - data->plox;
-		mov->y = crd->y - data->ploy;
-	}
-	else if (!mov->prio && mov->rprio > mov->reach)
-	{
-		mov->rprio = mov->reach;
-		mov->x = crd->x - data->plox;
-		mov->y = crd->y - data->ploy;
-	}
-}
-
 void						test_fit(t_data *restrict data, t_mov *restrict mov,
 							t_crd *restrict crd)
 {
-	if (crd->y + data->ply > data->my)
+	if (crd->y + data->ply - data->ploy > data->my)
 		BYEZ;
 	mov->hit = false;
 	mov->anchor = 0;
@@ -78,7 +62,13 @@ void						test_fit(t_data *restrict data, t_mov *restrict mov,
 		while (E_CLEAR && ++crd->p < data->plx)
 			check_move(data, mov, crd);
 	}
-	if (mov->hit == false && mov->anchor == 1)
-		mv_prio(data, mov, crd);
+	if (mov->hit == false && mov->anchor == 1 && (mov->contact > mov->prio
+		|| (!mov->prio && mov->rprio > mov->reach)))
+		{
+			mov->prio = mov->contact;
+			mov->rprio = mov->reach;
+			mov->x = crd->x - data->plox;
+			mov->y = crd->y - data->ploy;
+		}
 	test_fit(data, mov, up_coord(data, mov, crd));
 }
