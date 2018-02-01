@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 19:26:56 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/31 14:17:37 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/01 17:58:16 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ void						test_fit(t_data *restrict data, t_mov *restrict mov,
 	}
 	if (mov->hit == false && mov->anchor == 1 && (mov->contact > mov->prio
 		|| (!mov->prio && mov->rprio > mov->reach)))
-		{
-			mov->prio = mov->contact;
-			mov->rprio = mov->reach;
-			mov->x = crd->x - data->plox;
-			mov->y = crd->y - data->ploy;
-		}
+	{
+		mov->prio = mov->contact;
+		mov->rprio = mov->reach;
+		mov->x = crd->x - data->plox;
+		mov->y = crd->y - data->ploy;
+	}
 	test_fit(data, mov, up_coord(data, mov, crd));
 }

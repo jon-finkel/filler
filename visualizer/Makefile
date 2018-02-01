@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/01 15:25:26 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/01 16:49:21 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/01 22:03:47 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -84,7 +84,7 @@ noflags: re
 
 re: fclean all
 
-.PHONY: all cat clean debug fclean noflags re $(NAME)
+.PHONY: all cat clean debug fclean noflags re
 
 #################
 ##  WITH LOVE  ##

@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/25 23:01:23 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/01 16:16:04 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/01 22:13:25 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -90,7 +90,7 @@ re: fclean all
 visualizer:
 	@$(MAKE) -C $(VISUDIR)
 
-.PHONY: all cat clean debug fclean libft noflags re visualizer $(NAME)
+.PHONY: all cat clean debug fclean noflags re
 
 #################
 ##  WITH LOVE  ##
