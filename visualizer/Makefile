@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2017/12/25 23:01:23 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/01 16:16:04 by nfinkel          ###   ########.fr        #
+#    Created: 2018/02/01 15:25:26 by nfinkel           #+#    #+#              #
+#    Updated: 2018/02/01 16:19:56 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@
 OS :=						$(shell uname)
 
 #	Output
-NAME :=						nfinkel.filler
+NAME :=						visualizer
 
 #	Compiler
 CC :=						gcc
@@ -32,14 +32,14 @@ HEADERS :=					-I ./includes/
 O_FLAG :=					-O2
 
 #	Directories
-LIBFTDIR :=					./libft/
+LIBFTDIR :=					../libft/
+MINILIBDIR :=				./ressources/mlx/
 OBJDIR :=					./build/
-VISUDIR :=					./visualizer/
 
 SRCS_DIR :=					./srcs/
 
 #	Sources
-SRC +=						main.c fit.c reads.c surr.c
+SRC +=						main.c
 
 OBJECTS =					$(patsubst %.c,$(OBJDIR)%.o,$(SRCS))
 
@@ -53,9 +53,9 @@ vpath %.c $(SRCS_DIR)
 
 all: $(NAME)
 
-$(NAME): libft visualizer $(OBJECTS)
-	@$(CC) $(DEBUG) $(FLAGS) $(O_FLAG) $(patsubst %.c,$(OBJDIR)%.o,$(notdir $(SRCS))) -L $(LIBFTDIR) -lft -o $@
-	@printf  "\033[92m\033[1:32mCompiling -------------> \033[91m$(NAME)\033[0m:\033[0m%-6s\033[32m[✔]\033[0m\n"
+$(NAME): $(OBJECTS)
+	@$(CC) $(DEBUG) $(FLAGS) $(O_FLAG) $(patsubst %.c,$(OBJDIR)%.o,$(notdir $(SRCS))) -L $(LIBFTDIR) -lft -L $(MINILIBDIR) -lmlx -framework OpenGL -framework AppKit -o $@
+	@printf  "\033[92m\033[1:32mCompiling -------------> \033[91m$(NAME)\033[0m:\033[0m%-10s\033[32m[✔]\033[0m\n"
 
 $(OBJECTS): | $(OBJDIR)
 
@@ -63,13 +63,13 @@ $(OBJDIR):
 	@mkdir -p $@
 
 $(OBJDIR)%.o: %.c
-	@printf  "\033[1:92mCompiling $(NAME)\033[0m %-21s\033[32m[$<]\033[0m\n" ""
+	@printf  "\033[1:92mCompiling $(NAME)\033[0m %-25s\033[32m[$<]\033[0m\n" ""
 	@$(CC) $(VERSION) $(DEBUG)$(FLAGS)$(O_FLAG) $(HEADERS) -c $< -o $@
 	@printf "\033[A\033[2K"
 
 clean:
 	@/bin/rm -rf $(OBJDIR)
-	@printf  "\033[1:32mCleaning object files -> \033[91m$(NAME)\033[0m\033[1:32m:\033[0m%-6s\033[32m[✔]\033[0m\n"
+	@printf  "\033[1:32mCleaning object files -> \033[91m$(NAME)\033[0m\033[1:32m:\033[0m%-10s\033[32m[✔]\033[0m\n"
 
 debug: CC := clang
 debug: DEBUG := -g3 -fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined 
@@ -77,20 +77,14 @@ debug: fclean all
 
 fclean: clean
 	@/bin/rm -f $(NAME)
-	@printf  "\033[1:32mCleaning binary -------> \033[91m$(NAME)\033[0m\033[1:32m:\033[0m%-6s\033[32m[✔]\033[0m\n"
-
-libft:
-	@$(MAKE) -C $(LIBFTDIR)
+	@printf  "\033[1:32mCleaning binary -------> \033[91m$(NAME)\033[0m\033[1:32m:\033[0m%-10s\033[32m[✔]\033[0m\n"
 
 noflags: FLAGS :=
 noflags: re
 
 re: fclean all
 
-visualizer:
-	@$(MAKE) -C $(VISUDIR)
-
-.PHONY: all cat clean debug fclean libft noflags re visualizer $(NAME)
+.PHONY: all cat clean debug fclean noflags re $(NAME)
 
 #################
 ##  WITH LOVE  ##
