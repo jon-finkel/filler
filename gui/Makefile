@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/31 00:09:49 by nfinkel           #+#    #+#              #
-#    Updated: 2018/01/31 00:15:33 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/01 12:35:42 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,8 +32,8 @@ HEADERS :=					-I ./includes/
 O_FLAG :=					-O2
 
 #	Directories
-LIBFTDIR :=					./../libft/
-MINILIBX :=					./minilibx_macos/
+LIBFTDIR :=					../libft/
+MINILIBX :=					../includes/mlx/
 OBJDIR :=					./build/
 
 SRCS_DIR :=					./srcs/
