@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 15:23:16 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/01 15:25:09 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/01 16:49:05 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define VISUALIZER_H
 
 # include "../../libft/includes/libft.h"
-# include "../ressources/mlx/mlx.h"
+# include "../mlx/mlx.h"
 
 # define MLX mlx->mlx
 # define WIN_X 1200
@@ -23,7 +23,8 @@
 typedef struct		s_mlx
 {
 	void			*mlx;
-	void			*win_ptr;
+	void			*win;
+	void			*xpm;
 }					t_mlx;
 
 #endif

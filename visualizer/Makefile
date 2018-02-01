@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/01 15:25:26 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/01 16:19:56 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/01 16:49:21 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ O_FLAG :=					-O2
 
 #	Directories
 LIBFTDIR :=					../libft/
-MINILIBDIR :=				./ressources/mlx/
+MINILIBDIR :=				./mlx/
 OBJDIR :=					./build/
 
 SRCS_DIR :=					./srcs/
