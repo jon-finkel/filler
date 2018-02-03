@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/25 23:01:23 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/02 11:47:36 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/03 10:37:05 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,7 @@ vpath %.c $(SRCS_DIR)
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(OBJECTS)
+$(NAME): $(OBJECTS) | $(LIBFT)
 	@$(CC) $(DEBUG) $(FLAGS) $(O_FLAG) $(patsubst %.c,$(OBJDIR)%.o,$(notdir $(SRCS))) -L $(LIBFTDIR) -lft -o $@
 	@printf  "\033[92m\033[1:32mCompiling -------------> \033[91m$(NAME)\033[0m:\033[0m%-6s\033[32m[✔]\033[0m\n"
 
@@ -88,9 +88,12 @@ $(LIBFT):
 noflags: FLAGS :=
 noflags: re
 
+purge: fclean
+	@$(MAKE) fclean -C $(LIBFTDIR)
+
 re: fclean all
 
-.PHONY: all cat clean debug fclean noflags re
+.PHONY: all cat clean debug fclean noflags purge re
 
 #################
 ##  WITH LOVE  ##

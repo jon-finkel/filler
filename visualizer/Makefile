@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/01 15:25:26 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/02 21:33:27 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/03 10:43:31 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,11 +34,11 @@ O_FLAG :=					-O2
 
 #	Libraries:
 LIBFT :=					libft.a
-MLX :=						mlx.a
+LIBMLX :=						libmlx.a
 
 #	Directories
 LIBFTDIR :=					../libft/
-MINILIBDIR :=				./mlx/
+LIBMLXDIR :=				./mlx/
 OBJDIR :=					./build/
 
 SRCS_DIR :=					./srcs/
@@ -61,11 +61,11 @@ all: $(NAME)
 $(LIBFT):
 	@$(MAKE) -C $(LIBFTDIR)
 
-$(MLX):
-	@$(MAKE) -C $(MINILIBDIR)
+$(LIBMLX):
+	@$(MAKE) -C $(LIBMLXDIR)
 
-$(NAME): $(LIBFT) $(MLX) $(OBJECTS)
-	@$(CC) $(DEBUG) $(FLAGS) $(O_FLAG) $(patsubst %.c,$(OBJDIR)%.o,$(notdir $(SRCS))) -L $(LIBFTDIR) -lft -L $(MINILIBDIR) -lmlx -framework OpenGL -framework AppKit -o $@
+$(NAME): $(OBJECTS) | $(LIBMLX) $(LIBFT)
+	@$(CC) $(DEBUG) $(FLAGS) $(O_FLAG) $(patsubst %.c,$(OBJDIR)%.o,$(notdir $(SRCS))) -L $(LIBFTDIR) -lft -L $(LIBMLXDIR) -lmlx -framework OpenGL -framework AppKit -o $@
 	@printf  "\033[92m\033[1:32mCompiling -------------> \033[91m$(NAME)\033[0m:\033[0m%-10s\033[32m[✔]\033[0m\n"
 
 $(OBJECTS): | $(OBJDIR)
@@ -93,9 +93,13 @@ fclean: clean
 noflags: FLAGS :=
 noflags: re
 
+purge: fclean
+	@$(MAKE) fclean -C $(LIBFTDIR)
+	@$(MAKE) clean -C $(LIBMLXDIR)
+
 re: fclean all
 
-.PHONY: all cat clean debug fclean noflags re
+.PHONY: all cat clean debug fclean noflags purge re
 
 #################
 ##  WITH LOVE  ##
