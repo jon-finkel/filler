@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tools.c                                            :+:      :+:    :+:   */
+/*   squares.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/02 21:33:34 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/02 23:45:55 by nfinkel          ###   ########.fr       */
+/*   Created: 2018/02/03 18:49:45 by nfinkel           #+#    #+#             */
+/*   Updated: 2018/02/03 19:30:15 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,11 @@ static inline void			little_endian(char **aptr, const int color)
 	++*aptr;
 }
 
-inline void					color_square(t_mlx *mlx, const int color)
+static inline void			do_colors(t_mlx *mlx, char *ptr, const int color)
 {
-	char		*ptr;
 	int			k;
 	int			p;
 
-	ptr = mlx->sqr;
 	k = -1;
 	while (++k < mlx->sqrlen)
 	{
@@ -55,4 +53,17 @@ inline void					color_square(t_mlx *mlx, const int color)
 				little_endian(&ptr, color);
 		}
 	}
+}
+
+void						color_squares(t_mlx *mlx)
+{
+	KEEPATITBRA(mlx->bsqr = mlx_new_image(_MLX, mlx->sqrlen, mlx->sqrlen));
+	do_colors(mlx, mlx_get_data_addr(mlx->bsqr, &mlx->bppx, &mlx->sl,\
+		&mlx->endian), 0x2c2c2c);
+	KEEPATITBRA(mlx->sqrp1 = mlx_new_image(_MLX, mlx->sqrlen, mlx->sqrlen));
+	do_colors(mlx, mlx_get_data_addr(mlx->sqrp1, &mlx->bppx, &mlx->sl,\
+		&mlx->endian), _P1C);
+	KEEPATITBRA(mlx->sqrp2 = mlx_new_image(_MLX, mlx->sqrlen, mlx->sqrlen));
+	do_colors(mlx, mlx_get_data_addr(mlx->sqrp2, &mlx->bppx, &mlx->sl,\
+		&mlx->endian), _P2C);
 }

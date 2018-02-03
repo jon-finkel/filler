@@ -6,18 +6,16 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 15:29:27 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/03 00:01:22 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/03 23:09:45 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/visualizer.h"
-
 #define _MAP_FILE "map.xpm"
 #define _TITLE "Filler visualizer, by nfinkel"
-#define _ADJUST(x, y) ((x) * (mlx->sqrlen + mlx->space) + (y))
 #define BUFF_SIZE 32
 
-static int				get_sqrlen(t_mlx *mlx)
+static inline t_mlx			*get_sqrlen(t_mlx *mlx)
 {
 	size_t		nb;
 
@@ -26,37 +24,37 @@ static int				get_sqrlen(t_mlx *mlx)
 	while (nb * mlx->sqrlen + (mlx->space + 1) * (nb - 1) <= WIN_Y)
 		++mlx->space;
 	mlx->pad_x = (WIN_X / 2 - ((mlx->map_x * mlx->sqrlen)\
-		+ mlx->space * (mlx->map_x -1))) / 2;
+		+ mlx->space * (mlx->map_x - 1))) / 2;
 	mlx->pad_y = (WIN_Y - ((mlx->map_y * mlx->sqrlen)\
-		+ mlx->space * (mlx->map_y -1))) / 2;
-	GIMME(mlx->sqrlen);
+		+ mlx->space * (mlx->map_y - 1))) / 2;
+	GIMME(mlx);
 }
 
-static t_mlx			*output_grid(t_mlx *mlx)
+static t_mlx				*output_grid(t_mlx *mlx)
 {
 	char		*line;
 	int			k;
 	int			p;
 
-	KEEPATITBRA(get_next_line(STDIN_FILENO, &line));
+	if (!mlx)
+		ZOMG;
+	EPICFAILZ(get_next_line(STDIN_FILENO, &line), NULL);
 	mlx->map_y = ft_atoi(line + 8);
 	mlx->map_x = ft_atoi(line + ft_intlen(mlx->map_y) + 9);
 	ft_strdel(&line);
-	KEEPATITBRA(_SQR = mlx_new_image(_MLX, get_sqrlen(mlx), mlx->sqrlen));
-	mlx->sqr = mlx_get_data_addr(_SQR, &mlx->bppx, &mlx->sl, &mlx->endian);
-	color_square(mlx, 0x002c2c2c);
+	color_squares(get_sqrlen(mlx));
 	k = -1;
 	while (++k < mlx->map_y)
 	{
 		p = -1;
 		while (++p < mlx->map_x)
-			mlx_put_image_to_window(_MLX, _WIN, _SQR, _ADJUST(p, mlx->pad_x),\
-			_ADJUST(k, mlx->pad_y));
+			mlx_put_image_to_window(_MLX, _WIN, mlx->bsqr,\
+				_ADJUST(p, mlx->pad_x), _ADJUST(k, mlx->pad_y));
 	}
 	GIMME(mlx);
 }
 
-static t_mlx			*do_players(t_mlx *mlx)
+static t_mlx				*do_players(t_mlx *mlx)
 {
 	char		p1n[BUFF_SIZE];
 	char		p2n[BUFF_SIZE];
@@ -66,11 +64,14 @@ static t_mlx			*do_players(t_mlx *mlx)
 	k = 10;
 	while (--k)
 	{
-		KEEPATITBRA(get_next_line(STDIN_FILENO, &line));
+		EPICFAILZ(get_next_line(STDIN_FILENO, &line), NULL);
 		if (line[0] == '$' && line[10] == '1')
 			ft_snprintf(p1n, BUFF_SIZE, "%s", ft_strrchr(line, '/') + 1);
 		else if (line[0] == '$' && line[10] == '2')
 			ft_snprintf(p2n, BUFF_SIZE, "%s", ft_strrchr(line, '/') + 1);
+		else if (line[0] == '.' || ft_strequ(line, "error:"))
+			errhdl(mlx, line);
+		ft_strdel(&line);
 	}
 	*ft_strchr(&p1n[0], '.') = '\0';
 	*ft_strchr(&p2n[0], '.') = '\0';
@@ -79,7 +80,7 @@ static t_mlx			*do_players(t_mlx *mlx)
 	GIMME(mlx);
 }
 
-static t_mlx			*init_mlx(t_mlx *mlx)
+static t_mlx				*init_mlx(t_mlx *mlx)
 {
 	int			k;
 	int			p;
@@ -100,16 +101,25 @@ static t_mlx			*init_mlx(t_mlx *mlx)
 	GIMME(mlx);
 }
 
-int						main(void)
+int							main(void)
 {
+	char		*line;
+	int			ret;
+	t_dlist		*dlist;
 	t_mlx		*mlx;
 
-	if (!(mlx = init_mlx(NULL)))
-	{
+	if (!(mlx = init_mlx(NULL)) || !output_grid(do_players(mlx))
+		|| !(dlist = init_dlist(NULL, mlx)))
 		ft_fatal("allocation failed.");
-		ONOES;
+	while ((ret = get_next_line(STDIN_FILENO, &line)))
+	{
+		if (ret < 0)
+			ft_fatal("allocation failed.");
+		else if (line[0] == ' ')
+			if (do_map(&dlist, mlx) == -1)
+				ft_fatal("allocation failed.");
+		ft_strdel(&line);
 	}
-	output_grid(do_players(mlx));
 	mlx_loop(_MLX);
 	KTHXBYE;
 }

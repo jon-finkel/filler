@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/01 15:25:26 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/03 10:43:31 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/03 23:33:37 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,10 +32,6 @@ endif
 HEADERS :=					-I ./includes/
 O_FLAG :=					-O2
 
-#	Libraries:
-LIBFT :=					libft.a
-LIBMLX :=						libmlx.a
-
 #	Directories
 LIBFTDIR :=					../libft/
 LIBMLXDIR :=				./mlx/
@@ -44,7 +40,7 @@ OBJDIR :=					./build/
 SRCS_DIR :=					./srcs/
 
 #	Sources
-SRC +=						main.c tools.c
+SRC +=						main.c errhdl.c dlist.c squares.c
 
 OBJECTS =					$(patsubst %.c,$(OBJDIR)%.o,$(SRCS))
 
@@ -56,15 +52,9 @@ vpath %.c $(SRCS_DIR)
 ##    RULES    ##
 #################
 
-all: $(NAME)
+all: libft mlx $(NAME)
 
-$(LIBFT):
-	@$(MAKE) -C $(LIBFTDIR)
-
-$(LIBMLX):
-	@$(MAKE) -C $(LIBMLXDIR)
-
-$(NAME): $(OBJECTS) | $(LIBMLX) $(LIBFT)
+$(NAME): $(OBJECTS)
 	@$(CC) $(DEBUG) $(FLAGS) $(O_FLAG) $(patsubst %.c,$(OBJDIR)%.o,$(notdir $(SRCS))) -L $(LIBFTDIR) -lft -L $(LIBMLXDIR) -lmlx -framework OpenGL -framework AppKit -o $@
 	@printf  "\033[92m\033[1:32mCompiling -------------> \033[91m$(NAME)\033[0m:\033[0m%-10s\033[32m[✔]\033[0m\n"
 
@@ -84,11 +74,18 @@ clean:
 
 debug: CC := clang
 debug: DEBUG := -g3 -fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined 
+debug: FLAGS :=
 debug: fclean all
 
 fclean: clean
 	@/bin/rm -f $(NAME)
 	@printf  "\033[1:32mCleaning binary -------> \033[91m$(NAME)\033[0m\033[1:32m:\033[0m%-10s\033[32m[✔]\033[0m\n"
+
+libft:
+	@$(MAKE) -C $(LIBFTDIR)
+
+mlx:
+	@$(MAKE) -C $(LIBMLXDIR)
 
 noflags: FLAGS :=
 noflags: re
@@ -99,7 +96,7 @@ purge: fclean
 
 re: fclean all
 
-.PHONY: all cat clean debug fclean noflags purge re
+.PHONY: all cat clean debug fclean libft mlx noflags purge re
 
 #################
 ##  WITH LOVE  ##

@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 15:55:31 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/31 13:43:15 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/03 21:06:20 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ static inline t_data			*init_data(t_data *dat, int x, int y, int8_t pl)
 	char			row[x + 1];
 	t_vector		*vec;
 
-	KEEPATITBRA(vec = (t_vector *)ft_memalloc(sizeof(t_vector)));
+	FAILZ(vec = (t_vector *)ft_memalloc(sizeof(t_vector)), NULL);
 	vec->data_size = sizeof(char *);
-	KEEPATITBRA(dat = (t_data *)ft_memalloc(sizeof(t_data)));
+	FAILZ(dat = (t_data *)ft_memalloc(sizeof(t_data)), NULL);
 	dat->self = (pl == 1 ? 'O' : 'X');
 	dat->op = (pl == 1 ? 'X' : 'O');
 	dat->mx = x;
@@ -27,7 +27,7 @@ static inline t_data			*init_data(t_data *dat, int x, int y, int8_t pl)
 	ft_memset(row, '.', x);
 	row[x] = '\0';
 	while (y--)
-		KEEPATITBRA(*(char **)ft_vecpush(vec) = ft_strdup(row));
+		FAILZ(*(char **)ft_vecpush(vec) = ft_strdup(row), NULL);
 	dat->map = vec->buff;
 	free(vec);
 	GIMME(dat);
@@ -57,22 +57,20 @@ static inline t_data			*get_size(t_data *data, const char **pc)
 	GIMME(data);
 }
 
-static void						get_piece(t_data *restrict data,
-								t_mov *restrict mov, int y)
+static int						get_piece(t_data *data, t_mov *mov, int y)
 {
 	char			*line;
 	int				k;
 	t_crd			crd;
 	t_vector		*vec;
 
-	KEEPATITBRA(vec = (t_vector *)ft_memalloc(sizeof(t_vector)));
+	FAILZ(vec = (t_vector *)ft_memalloc(sizeof(t_vector)), -1);
 	vec->data_size = sizeof(char *);
 	k = -1;
 	while (++k < y)
 	{
-		if (get_next_line(STDIN_FILENO, &line) == -1)
-			continue ;
-		KEEPATITBRA(*(char **)ft_vecpush(vec) = line);
+		EPICFAILZ(get_next_line(STDIN_FILENO, &line), -1);
+		FAILZ(*(char **)ft_vecpush(vec) = line, -1);
 	}
 	ft_memset(mov, '\0', sizeof(t_mov));
 	mov->pc = vec->buff;
@@ -84,26 +82,30 @@ static void						get_piece(t_data *restrict data,
 	test_fit(get_size(strat_map(data), (const char **)mov->pc), mov, &crd);
 	ft_vecclear(vec, (t_del)(&ft_memdel));
 	free(vec);
+	KTHXBYE;
 }
 
-static inline void				fight(t_data *data)
+static inline int				fight(t_data *data)
 {
 	int8_t		r_pos;
 	char		*line;
 	int			ret;
 	t_mov		mov;
 
+	if (!data)
+		ONOES;
 	r_pos = true;
 	while ((ret = get_next_line(STDIN_FILENO, &line)))
 	{
-		if (ret == -1)
-			continue ;
+		if (ret < 0)
+			ONOES;
 		if (ft_isdigit(line[0]))
 			r_pos = up_map(data, line, r_pos);
 		else if (line[1] == 'i' && (r_pos = true))
-			get_piece(data, &mov, ft_atoi(line + 6));
+			EPICFAILZ(get_piece(data, &mov, ft_atoi(line + 6)), -1);
 		ft_strdel(&line);
 	}
+	KTHXBYE;
 }
 
 int								main(void)
@@ -113,13 +115,13 @@ int								main(void)
 	int			y;
 	int8_t		pl;
 
-	KEEPATITBRA(get_next_line(STDIN_FILENO, &line));
+	EPICFAILZ(get_next_line(STDIN_FILENO, &line), -1);
 	pl = (line[10] == '1' ? 1 : 2);
 	ft_strdel(&line);
-	KEEPATITBRA(get_next_line(STDIN_FILENO, &line));
+	EPICFAILZ(get_next_line(STDIN_FILENO, &line), -1);
 	y = ft_atoi(line + 8);
 	x = ft_atoi(line + ft_intlen(y) + 9);
 	ft_strdel(&line);
-	fight(init_data(NULL, x, y, pl));
+	EPICFAILZ(fight(init_data(NULL, x, y, pl)), -1);
 	KTHXBYE;
 }

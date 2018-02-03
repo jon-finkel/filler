@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/25 23:01:23 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/03 10:37:05 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/03 23:28:54 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,11 +32,8 @@ endif
 HEADERS :=					-I ./includes/
 O_FLAG :=					-O2
 
-#	Libraries
-LIBFT :=					libft.a
-
 #	Directories
-LIBFTDIR :=					./libft/
+LIBFTDIR =					./libft/
 OBJDIR :=					./build/
 
 SRCS_DIR :=					./srcs/
@@ -54,9 +51,9 @@ vpath %.c $(SRCS_DIR)
 ##    RULES    ##
 #################
 
-all: $(NAME)
+all: libft $(NAME)
 
-$(NAME): $(OBJECTS) | $(LIBFT)
+$(NAME): $(OBJECTS)
 	@$(CC) $(DEBUG) $(FLAGS) $(O_FLAG) $(patsubst %.c,$(OBJDIR)%.o,$(notdir $(SRCS))) -L $(LIBFTDIR) -lft -o $@
 	@printf  "\033[92m\033[1:32mCompiling -------------> \033[91m$(NAME)\033[0m:\033[0m%-6s\033[32m[✔]\033[0m\n"
 
@@ -76,13 +73,14 @@ clean:
 
 debug: CC := clang
 debug: DEBUG := -g3 -fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined 
+debug: FLAGS :=
 debug: fclean all
 
 fclean: clean
 	@/bin/rm -f $(NAME)
 	@printf  "\033[1:32mCleaning binary -------> \033[91m$(NAME)\033[0m\033[1:32m:\033[0m%-6s\033[32m[✔]\033[0m\n"
 
-$(LIBFT):
+libft:
 	@$(MAKE) -C $(LIBFTDIR)
 
 noflags: FLAGS :=
@@ -93,7 +91,7 @@ purge: fclean
 
 re: fclean all
 
-.PHONY: all cat clean debug fclean noflags purge re
+.PHONY: all cat clean debug fclean libft noflags purge re
 
 #################
 ##  WITH LOVE  ##

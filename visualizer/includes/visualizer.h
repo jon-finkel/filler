@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 15:23:16 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/03 00:01:39 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/03 23:05:29 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,31 @@
 # include "../../libft/includes/libft.h"
 # include "../mlx/mlx.h"
 
+# define _ADJUST(x, y) ((x) * (mlx->sqrlen + mlx->space) + (y))
 # define _MLX mlx->mlx
-# define _SQR mlx->img
+# define _SQR mlx->sqr
+# define _P1 mlx->sqrp1
+# define _P2 mlx->sqrp2
 # define _WIN mlx->win_ptr
-# define _PX (WIN_X / 2 + WIN_PAD + 50)
-# define _P1Y (WIN_Y / 2 + WIN_PAD - 50)
+# define _PX (WIN_X / 2 + 50)
+# define _P1Y (WIN_Y / 2 - 50)
 # define _P1SY (_P1Y + 50)
-# define _P2Y (WIN_Y * 3 / 4 - WIN_PAD - 30)
+# define _P2Y (WIN_Y * 3 / 4 - 30)
 # define _P2SY (_P2Y + 50)
-# define _P1C 0xF0F0F0
-# define _P2C 0xFFFFFF
+# define _P1C 0xFF0000
+# define _P2C 0x0000FF
 # define WIN_X 1200
 # define WIN_Y 600
 
+struct				s_move
+{
+	int				score;
+	uint8_t			nb;
+	unsigned short	crd[255][2];
+};
+
 typedef struct		s_mlx
 {
-	char			*sqr;
 	struct			s_sqr
 	{
 		int			__bppx;
@@ -44,17 +53,23 @@ typedef struct		s_mlx
 	unsigned short	pad_x;
 	unsigned short	map_y;
 	unsigned short	pad_y;
-	void			*img;
+	void			*bsqr;
+	void			*sqrp1;
+	void			*sqrp2;
 	void			*mlx;
 	void			*win_ptr;
 }					t_mlx;
 
+#define DLIST ((struct s_move *)(dlist->data))
 #define bppx __sqr.__bppx
 #define endian __sqr.__endian
 #define sl __sqr.__sl
 #define space __sqr.__space
 #define sqrlen __sqr.__sqrlen
 
-void				color_square(t_mlx *mlx, int color);
+void				color_squares(t_mlx *mlx);
+int					do_map(t_dlist **adlst, t_mlx *mlx);
+t_dlist				*init_dlist(t_dlist *dlist, const t_mlx *mlx);
+void				errhdl(t_mlx *mlx, char *line);
 
 #endif

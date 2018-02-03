@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 19:26:56 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/01 17:58:16 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/03 18:24:05 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 #define TICY (crd->y + crd->k - data->ploy)
 #define TILE data->map[TICY][TICX]
 
-static inline t_crd			*up_coord(const t_data *restrict data,
-							const t_mov *restrict mov, t_crd *restrict crd)
+static inline t_crd			*up_coord(const t_data *data, const t_mov *mov,
+							t_crd *crd)
 {
 	crd->x = (crd->x + data->plx - data->plox == data->mx ? 0 : crd->x + 1);
 	if (!crd->x)
@@ -28,8 +28,8 @@ static inline t_crd			*up_coord(const t_data *restrict data,
 	GIMME(crd);
 }
 
-static inline void			check_move(const t_data *restrict data,
-							t_mov *restrict mov, t_crd *restrict crd)
+static inline void			check_move(const t_data *data, t_mov *mov,
+							t_crd *crd)
 {
 	if (TILE == data->op && mov->pc[crd->k][crd->p] == '*' && (mov->hit = true))
 		BYEZ;
@@ -46,8 +46,7 @@ static inline void			check_move(const t_data *restrict data,
 	}
 }
 
-void						test_fit(t_data *restrict data, t_mov *restrict mov,
-							t_crd *restrict crd)
+void						test_fit(t_data *data, t_mov *mov, t_crd *crd)
 {
 	if (crd->y + data->ply - data->ploy > data->my)
 		BYEZ;

@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 18:26:03 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/01/29 16:37:05 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/03 18:24:22 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ static inline void			get_op_move(t_data *data, const int x, const int y)
 	data->op_pos[1] = y;
 }
 
-inline bool					up_map(t_data *restrict data,
-							const char *restrict line, bool r_pos)
+inline bool					up_map(t_data *data, const char *line, bool r_pos)
 {
 	int		x;
 	int		y;
