@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/01 15:25:26 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/01 22:03:47 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/02 21:33:27 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,12 +24,17 @@ NAME :=						visualizer
 CC :=						gcc
 VERSION :=					-std=c11
 
+#	Flags:
 ifneq ($(OS), Linux)
 	FLAGS +=				-Wall -Wextra -Werror 
 endif
 
 HEADERS :=					-I ./includes/
 O_FLAG :=					-O2
+
+#	Libraries:
+LIBFT :=					libft.a
+MLX :=						mlx.a
 
 #	Directories
 LIBFTDIR :=					../libft/
@@ -39,7 +44,7 @@ OBJDIR :=					./build/
 SRCS_DIR :=					./srcs/
 
 #	Sources
-SRC +=						main.c
+SRC +=						main.c tools.c
 
 OBJECTS =					$(patsubst %.c,$(OBJDIR)%.o,$(SRCS))
 
@@ -53,7 +58,13 @@ vpath %.c $(SRCS_DIR)
 
 all: $(NAME)
 
-$(NAME): $(OBJECTS)
+$(LIBFT):
+	@$(MAKE) -C $(LIBFTDIR)
+
+$(MLX):
+	@$(MAKE) -C $(MINILIBDIR)
+
+$(NAME): $(LIBFT) $(MLX) $(OBJECTS)
 	@$(CC) $(DEBUG) $(FLAGS) $(O_FLAG) $(patsubst %.c,$(OBJDIR)%.o,$(notdir $(SRCS))) -L $(LIBFTDIR) -lft -L $(MINILIBDIR) -lmlx -framework OpenGL -framework AppKit -o $@
 	@printf  "\033[92m\033[1:32mCompiling -------------> \033[91m$(NAME)\033[0m:\033[0m%-10s\033[32m[✔]\033[0m\n"
 
