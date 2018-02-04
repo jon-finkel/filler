@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/25 23:01:23 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/03 23:28:54 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/04 20:04:46 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ O_FLAG :=					-O2
 #	Directories
 LIBFTDIR =					./libft/
 OBJDIR :=					./build/
+VISUDIR :=					./visualizer/
 
 SRCS_DIR :=					./srcs/
 
@@ -87,7 +88,7 @@ noflags: FLAGS :=
 noflags: re
 
 purge: fclean
-	@$(MAKE) fclean -C $(LIBFTDIR)
+	@$(MAKE) purge -C $(VISUDIR)
 
 re: fclean all
 

@@ -6,12 +6,12 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 15:29:27 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/03 23:09:45 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/04 20:55:18 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/visualizer.h"
-#define _MAP_FILE "map.xpm"
+#define _MAP_FILE "./ressources/map.xpm"
 #define _TITLE "Filler visualizer, by nfinkel"
 #define BUFF_SIZE 32
 
@@ -42,7 +42,7 @@ static t_mlx				*output_grid(t_mlx *mlx)
 	mlx->map_y = ft_atoi(line + 8);
 	mlx->map_x = ft_atoi(line + ft_intlen(mlx->map_y) + 9);
 	ft_strdel(&line);
-	color_squares(get_sqrlen(mlx));
+	EPICFAILZ(color_squares(get_sqrlen(mlx)), NULL);
 	k = -1;
 	while (++k < mlx->map_y)
 	{
@@ -71,6 +71,8 @@ static t_mlx				*do_players(t_mlx *mlx)
 			ft_snprintf(p2n, BUFF_SIZE, "%s", ft_strrchr(line, '/') + 1);
 		else if (line[0] == '.' || ft_strequ(line, "error:"))
 			errhdl(mlx, line);
+		else if (line[0] != 'l' && line[0] != '#' && line[0] != 'P')
+			ft_fatal("wrong input");
 		ft_strdel(&line);
 	}
 	*ft_strchr(&p1n[0], '.') = '\0';
@@ -103,23 +105,13 @@ static t_mlx				*init_mlx(t_mlx *mlx)
 
 int							main(void)
 {
-	char		*line;
-	int			ret;
-	t_dlist		*dlist;
-	t_mlx		*mlx;
+	t_data		data;
 
-	if (!(mlx = init_mlx(NULL)) || !output_grid(do_players(mlx))
-		|| !(dlist = init_dlist(NULL, mlx)))
+	if (!(data.mlx = init_mlx(NULL)) || !output_grid(do_players(data.mlx))
+		|| !(data.dlist = init_dlist(NULL, data.mlx)))
 		ft_fatal("allocation failed.");
-	while ((ret = get_next_line(STDIN_FILENO, &line)))
-	{
-		if (ret < 0)
-			ft_fatal("allocation failed.");
-		else if (line[0] == ' ')
-			if (do_map(&dlist, mlx) == -1)
-				ft_fatal("allocation failed.");
-		ft_strdel(&line);
-	}
-	mlx_loop(_MLX);
+	mlx_key_hook(data._WIN, &hook_key, &data);
+	mlx_loop_hook(data._MLX, &hook_loop, &data);
+	mlx_loop(data._MLX);
 	KTHXBYE;
 }

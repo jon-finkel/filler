@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/01 15:25:26 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/03 23:33:37 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/04 20:05:27 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,13 +34,13 @@ O_FLAG :=					-O2
 
 #	Directories
 LIBFTDIR :=					../libft/
-LIBMLXDIR :=				./mlx/
+LIBMLXDIR :=				./ressources/mlx/
 OBJDIR :=					./build/
 
 SRCS_DIR :=					./srcs/
 
 #	Sources
-SRC +=						main.c errhdl.c dlist.c squares.c
+SRC +=						main.c errhdl.c dlist.c squares.c hooks.c
 
 OBJECTS =					$(patsubst %.c,$(OBJDIR)%.o,$(SRCS))
 
