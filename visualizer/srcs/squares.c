@@ -6,14 +6,17 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 18:49:45 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/04 17:26:49 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/04 22:04:15 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/visualizer.h"
 
-static inline void			big_endian(char **aptr, const int color)
+static inline void			big_endian(char **aptr, int color, const int x,
+							const int y)
 {
+	if (x > y)
+		color += 0x101010;
 	**aptr = (color & 0xff000000) >> 24;
 	++*aptr;
 	**aptr = (color & 0xff0000) >> 16;
@@ -24,8 +27,11 @@ static inline void			big_endian(char **aptr, const int color)
 	++*aptr;
 }
 
-static inline void			little_endian(char **aptr, const int color)
+static inline void			little_endian(char **aptr, int color, const int x,
+							const int y)
 {
+	if (x > y)
+		color += 0x101010;
 	**aptr = color & 0xff;
 	++*aptr;
 	**aptr = (color & 0xff00) >> 8;
@@ -50,14 +56,14 @@ static inline void			do_colors(t_mlx *mlx, char *ptr, const int color)
 			if (!p || !k || k == mlx->sqrlen - 1 || p == mlx->sl / 4 - 1)
 			{
 				if (mlx->endian)
-					big_endian(&ptr, 0x2c2c2c);
+					big_endian(&ptr, 0x2c2c2c, 0, 0);
 				else
-					little_endian(&ptr, 0x2c2c2c);
+					little_endian(&ptr, 0x2c2c2c, 0, 0);
 			}
 			else if (mlx->endian)
-				big_endian(&ptr, color);
+				big_endian(&ptr, color, p, k);
 			else
-				little_endian(&ptr, color);
+				little_endian(&ptr, color, p, k);
 		}
 	}
 }

@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/01 15:25:26 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/04 20:05:27 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/04 21:08:21 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,7 @@ OBJDIR :=					./build/
 SRCS_DIR :=					./srcs/
 
 #	Sources
-SRC +=						main.c errhdl.c dlist.c squares.c hooks.c
+SRC +=						main.c errhdl.c move.c squares.c hooks.c
 
 OBJECTS =					$(patsubst %.c,$(OBJDIR)%.o,$(SRCS))
 

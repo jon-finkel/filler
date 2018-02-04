@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 15:23:16 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/04 21:04:43 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/04 22:29:52 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,12 @@
 //# define _P1SY (_P1Y + 50)
 //# define _P2Y (WIN_Y * 3 / 4 - 30)
 //# define _P2SY (_P2Y + 50)
-# define _P1C 0xe74c3c
-# define _P2C 0x3498db
-# define WIN_X 1200
-# define WIN_Y 600
-
-struct				s_move
-{
-	char			player;
-	int				score;
-	uint8_t			nb;
-	unsigned short	crd[255][2];
-};
+//# define _P1C 0xe74c3c
+//# define _P2C 0x3498db
+# define _P1C 0x2e6b23
+# define _P2C 0xb87920
+# define WIN_X 1800
+# define WIN_Y 900
 
 typedef struct		s_mlx
 {
@@ -52,22 +46,16 @@ typedef struct		s_mlx
 		int			__space;
 		int			__sqrlen;
 	}				__sqr;
-	unsigned short	map_x;
-	unsigned short	pad_x;
-	unsigned short	map_y;
-	unsigned short	pad_y;
+	uint8_t			map_x;
+	uint8_t			pad_x;
+	uint8_t			map_y;
+	uint8_t			pad_y;
 	void			*bsqr;
 	void			*sqrp1;
 	void			*sqrp2;
 	void			*mlx;
 	void			*win_ptr;
 }					t_mlx;
-
-typedef struct		s_data
-{
-	t_mlx			*mlx;
-	t_dlist			*dlist;
-}					t_data;
 
 #define bppx __sqr.__bppx
 #define endian __sqr.__endian
@@ -76,10 +64,10 @@ typedef struct		s_data
 #define sqrlen __sqr.__sqrlen
 
 int					color_squares(t_mlx *mlx);
-int					do_map(t_dlist **adlst, t_mlx *mlx);
+int					do_map(t_mlx *mlx, int *p1score, int *p2score);
 void				errhdl(t_mlx *mlx, char *line);
-int					hook_key(int key, t_data *data);
-int					hook_loop(t_data *data);
-t_dlist				*init_dlist(t_dlist *dlist, const t_mlx *mlx);
+int					hook_key(int key, t_mlx *mlx);
+int					hook_loop(t_mlx *mlx);
+int					init_map(const t_mlx *mlx);
 
 #endif

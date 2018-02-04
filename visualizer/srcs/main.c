@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 15:29:27 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/04 20:55:18 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/04 22:14:56 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ static t_mlx				*output_grid(t_mlx *mlx)
 	EPICFAILZ(get_next_line(STDIN_FILENO, &line), NULL);
 	mlx->map_y = ft_atoi(line + 8);
 	mlx->map_x = ft_atoi(line + ft_intlen(mlx->map_y) + 9);
+	if (mlx->map_x > 100 || mlx->map_y > 100)
+		ft_fatal("map size isn't supported by visualizer");
 	ft_strdel(&line);
 	EPICFAILZ(color_squares(get_sqrlen(mlx)), NULL);
 	k = -1;
@@ -105,13 +107,13 @@ static t_mlx				*init_mlx(t_mlx *mlx)
 
 int							main(void)
 {
-	t_data		data;
+	t_mlx		*mlx;
 
-	if (!(data.mlx = init_mlx(NULL)) || !output_grid(do_players(data.mlx))
-		|| !(data.dlist = init_dlist(NULL, data.mlx)))
+	if (!(mlx = init_mlx(NULL)) || !output_grid(do_players(mlx)))
 		ft_fatal("allocation failed.");
-	mlx_key_hook(data._WIN, &hook_key, &data);
-	mlx_loop_hook(data._MLX, &hook_loop, &data);
-	mlx_loop(data._MLX);
+	init_map(mlx);
+	mlx_key_hook(_WIN, &hook_key, mlx);
+	mlx_loop_hook(_MLX, &hook_loop, mlx);
+	mlx_loop(_MLX);
 	KTHXBYE;
 }
