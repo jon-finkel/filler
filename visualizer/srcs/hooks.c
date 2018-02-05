@@ -6,11 +6,13 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/04 17:15:39 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/04 21:48:12 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/05 16:00:41 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/visualizer.h"
+#define _RES "running..."
+#define _PAUSE "paused"
 
 int							hook_key(int key, t_mlx *mlx)
 {
@@ -30,8 +32,7 @@ int							hook_loop(t_mlx *mlx)
 
 	if (mlx->play)
 	{
-		ret = get_next_line(STDIN_FILENO, &line);
-		if (ret < 0)
+		if ((ret = get_next_line(STDIN_FILENO, &line)) < 0)
 			ft_fatal("allocation failed.");
 		else if (line[0] == ' ')
 			if (do_map(mlx, &p1score, &p2score) == -1)

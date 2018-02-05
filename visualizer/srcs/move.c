@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 17:34:00 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/05 13:34:50 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/05 16:53:23 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ inline int					init_map(const t_mlx *mlx)
 		while (++p < mlx->map_x)
 			if (line[p + 4] == 'O' || line[p + 4] == 'X')
 				_DO_TILE((line[p + 4] == 'O' ? _P1 : _P2),\
-					_ADJUST(p, mlx->pad_x), _ADJUST(k, mlx->pad_y));
+					_PADX + _ADJUST(p), _PADY + _ADJUST(k));
 		ft_strdel(&line);
 	}
 	KTHXBYE;
@@ -38,13 +38,15 @@ static inline int			output_score(const t_mlx *mlx, const int p1s,
 {
 	char		*s;
 
+(void)mlx;
 	s = ft_itoa(p1s);
-	mlx_put_image_to_window(_MLX, _WIN, mlx->clean, WIN_X - 90, _P1Y);
-	mlx_string_put(_MLX, _WIN, WIN_X - 90, _P1Y, _P1C, s);
+//	mlx_put_image_to_window(_MLX, _WIN, mlx->clean, WIN_X - 90, _P1Y);
+//	mlx_string_put(_MLX, _WIN, WIN_X - 90, _P1Y, _P1C, s);
 	free(s);
 	s = ft_itoa(p2s);
-	mlx_put_image_to_window(_MLX, _WIN, mlx->clean, WIN_X - 90, _P2Y);
-	mlx_string_put(_MLX, _WIN, WIN_X - 90, _P2Y, _P2C, s);
+//	mlx_put_image_to_window(_MLX, _WIN, mlx->clean, WIN_X - 90, _P2Y);
+//	mlx_string_put(_MLX, _WIN, WIN_X - 90, _P2Y, _P2C, s);
+	ft_strdel(&s);
 	KTHXBYE;
 }
 
@@ -65,7 +67,7 @@ int							do_map(t_mlx *mlx, int *p1score, int *p2score)
 			if (line[p + 4] == 'o' || line[p + 4] == 'x')
 			{
 				_DO_TILE((line[p + 4] == 'o' ? _P1 : _P2),\
-					_ADJUST(p, mlx->pad_x), _ADJUST(k, mlx->pad_y));
+					_PADX + _ADJUST(p), _PADY + _ADJUST(k));
 				if (score == false && line[p + 4] == 'o' && (score = true))
 					++*p1score;
 				else if (score == false && (score = true))
@@ -74,26 +76,4 @@ int							do_map(t_mlx *mlx, int *p1score, int *p2score)
 		ft_strdel(&line);
 	}
 	GIMME(output_score(mlx, *p1score, *p2score));
-}
-
-inline int					do_bars(void *restrict mlx, void *restrict win)
-{
-	int		k;
-	int		p;
-
-	k = _P1Y + 40 - 1;
-	while (++k < _P1Y + 60)
-	{
-		p = _PX - 1;
-		while (++p < WIN_X - 50)
-			mlx_pixel_put(mlx, win, p, k, _P1C - 0x202020);
-	}
-	k = _P2Y + 40 - 1;
-	while (++k < _P2Y + 60)
-	{
-		p = _PX - 1;
-		while (++p < WIN_X - 50)
-			mlx_pixel_put(mlx, win, p, k, _P2C - 0x202020);
-	}
-	KTHXBYE;
 }
