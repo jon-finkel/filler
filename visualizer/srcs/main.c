@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 15:29:27 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/04 22:14:56 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/05 12:53:31 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ static t_mlx				*do_players(t_mlx *mlx)
 	}
 	*ft_strchr(&p1n[0], '.') = '\0';
 	*ft_strchr(&p2n[0], '.') = '\0';
-//	mlx_string_put(_MLX, _WIN, _PX, _P1Y, _P1C, p1n);
-//	mlx_string_put(_MLX, _WIN, _PX, _P2Y, _P2C, p2n);
+	mlx_string_put(_MLX, _WIN, _PX, _P1Y, _P1C, p1n);
+	mlx_string_put(_MLX, _WIN, _PX, _P2Y, _P2C, p2n);
 	GIMME(mlx);
 }
 
@@ -98,7 +98,7 @@ static t_mlx				*init_mlx(t_mlx *mlx)
 	{
 		p = (WIN_X / 2) - 1;
 		while (++p < WIN_X)
-			mlx_pixel_put(_MLX, _WIN, p, k, 0x00202020);
+			mlx_pixel_put(_MLX, _WIN, p, k, 0x202020);
 	}
 	FAILZ(xpm = mlx_xpm_file_to_image(_MLX, _MAP_FILE, &k, &p), NULL);
 	mlx_put_image_to_window(_MLX, _WIN, xpm, 0, 0);
@@ -109,9 +109,9 @@ int							main(void)
 {
 	t_mlx		*mlx;
 
-	if (!(mlx = init_mlx(NULL)) || !output_grid(do_players(mlx)))
+	if (!(mlx = init_mlx(NULL)) || !output_grid(do_players(mlx))
+		|| init_map(mlx) < 0 || do_bars(_MLX, _WIN) < 0)
 		ft_fatal("allocation failed.");
-	init_map(mlx);
 	mlx_key_hook(_WIN, &hook_key, mlx);
 	mlx_loop_hook(_MLX, &hook_loop, mlx);
 	mlx_loop(_MLX);

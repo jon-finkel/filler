@@ -6,20 +6,20 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 17:34:00 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/04 21:54:59 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/05 13:34:50 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/visualizer.h"
 #define _DO_TILE(x, y, z) mlx_put_image_to_window(_MLX, _WIN, x, y, z)
 
-int					init_map(const t_mlx *mlx)
+inline int					init_map(const t_mlx *mlx)
 {
 	char			*line;
 	int				k;
 	int				p;
 
-	k = -1;
+	k = -2;
 	while (++k < mlx->map_y)
 	{
 		EPICFAILZ(get_next_line(STDIN_FILENO, &line), -1);
@@ -33,15 +33,22 @@ int					init_map(const t_mlx *mlx)
 	KTHXBYE;
 }
 
-static int			output_score(const t_mlx *mlx, const int p1s, const int p2s)
+static inline int			output_score(const t_mlx *mlx, const int p1s,
+							const int p2s)
 {
-	(void)mlx;
-	(void)p1s;
-	(void)p2s;
+	char		*s;
+
+	s = ft_itoa(p1s);
+	mlx_put_image_to_window(_MLX, _WIN, mlx->clean, WIN_X - 90, _P1Y);
+	mlx_string_put(_MLX, _WIN, WIN_X - 90, _P1Y, _P1C, s);
+	free(s);
+	s = ft_itoa(p2s);
+	mlx_put_image_to_window(_MLX, _WIN, mlx->clean, WIN_X - 90, _P2Y);
+	mlx_string_put(_MLX, _WIN, WIN_X - 90, _P2Y, _P2C, s);
 	KTHXBYE;
 }
 
-int					do_map(t_mlx *mlx, int *p1score, int *p2score)
+int							do_map(t_mlx *mlx, int *p1score, int *p2score)
 {
 	bool		score;
 	char		*line;
@@ -67,4 +74,26 @@ int					do_map(t_mlx *mlx, int *p1score, int *p2score)
 		ft_strdel(&line);
 	}
 	GIMME(output_score(mlx, *p1score, *p2score));
+}
+
+inline int					do_bars(void *restrict mlx, void *restrict win)
+{
+	int		k;
+	int		p;
+
+	k = _P1Y + 40 - 1;
+	while (++k < _P1Y + 60)
+	{
+		p = _PX - 1;
+		while (++p < WIN_X - 50)
+			mlx_pixel_put(mlx, win, p, k, _P1C - 0x202020);
+	}
+	k = _P2Y + 40 - 1;
+	while (++k < _P2Y + 60)
+	{
+		p = _PX - 1;
+		while (++p < WIN_X - 50)
+			mlx_pixel_put(mlx, win, p, k, _P2C - 0x202020);
+	}
+	KTHXBYE;
 }
