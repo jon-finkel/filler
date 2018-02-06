@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 17:34:00 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/05 16:53:23 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/05 20:58:55 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static inline int			output_score(const t_mlx *mlx, const int p1s,
 {
 	char		*s;
 
+// A faire, le calcule du score est correct, juste a l'afficher
 (void)mlx;
 	s = ft_itoa(p1s);
 //	mlx_put_image_to_window(_MLX, _WIN, mlx->clean, WIN_X - 90, _P1Y);

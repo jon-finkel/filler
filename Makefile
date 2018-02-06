@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/25 23:01:23 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/04 20:04:46 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/05 14:01:39 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,7 @@ vpath %.c $(SRCS_DIR)
 ##    RULES    ##
 #################
 
-all: libft $(NAME)
+all: visualizer $(NAME)
 
 $(NAME): $(OBJECTS)
 	@$(CC) $(DEBUG) $(FLAGS) $(O_FLAG) $(patsubst %.c,$(OBJDIR)%.o,$(notdir $(SRCS))) -L $(LIBFTDIR) -lft -o $@
@@ -81,9 +81,6 @@ fclean: clean
 	@/bin/rm -f $(NAME)
 	@printf  "\033[1:32mCleaning binary -------> \033[91m$(NAME)\033[0m\033[1:32m:\033[0m%-6s\033[32m[✔]\033[0m\n"
 
-libft:
-	@$(MAKE) -C $(LIBFTDIR)
-
 noflags: FLAGS :=
 noflags: re
 
@@ -92,7 +89,10 @@ purge: fclean
 
 re: fclean all
 
-.PHONY: all cat clean debug fclean libft noflags purge re
+visualizer:
+	@$(MAKE) -C $(VISUDIR)
+
+.PHONY: all cat clean debug fclean noflags purge re visualizer
 
 #################
 ##  WITH LOVE  ##

@@ -1,0 +1,37 @@
+/* XPM */
+static char *f[] = {
+/* columns rows colors chars-per-pixel */
+"33 28 3 1 ",
+"  c #DEC311",
+". c #DFC411",
+"X c None",
+/* pixels */
+"XXXXX........................XXXX",
+"XXXXX........................XXXX",
+"XXXXX........................XXXX",
+"XXXXX........................XXXX",
+"XXXXX........................XXXX",
+"XXXXX........................XXXX",
+"XXXXX........................XXXX",
+"XXXXX........................XXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.................. XXXXXXXXX",
+"XXXXX.................. XXXXXXXXX",
+"XXXXX.................. XXXXXXXXX",
+"XXXXX.................. XXXXXXXXX",
+"XXXXX.................. XXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX",
+"XXXXX.........XXXXXXXXXXXXXXXXXXX"
+};

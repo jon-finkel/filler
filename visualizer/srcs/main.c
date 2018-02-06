@@ -6,33 +6,21 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 15:29:27 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/05 16:58:42 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/06 16:03:32 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/visualizer.h"
-#define _MAP_FILE "./ressources/map.xpm"
+#define _MAP_FILE "./ressources/map.xpm" // Cette ligne marche chez nfinkel.
+//#define _MAP_FILE "visualizer/ressources/map.xpm" // Cette ligne marche chez fsabatie.
 #define _TITLE "Filler visualizer, by nfinkel and fsabatie"
 #define BUFF_SIZE 32
-
-static inline t_mlx			*get_sqrlen(t_mlx *mlx)
-{
-	size_t		nb;
-	size_t		width;
-
-	nb = MAX(mlx->map_x, mlx->map_y);
-	width = WIN_X / 2;
-	mlx->sqrlen = (width - (nb - 1)) / nb;
-	mlx->pad_x = (width - ((mlx->map_x * mlx->sqrlen) + mlx->map_x - 1)) / 2;
-	mlx->pad_y = (width - ((mlx->map_y * mlx->sqrlen) + mlx->map_y - 1)) / 2;
-	GIMME(mlx);
-}
 
 static t_mlx				*output_grid(t_mlx *mlx)
 {
 	char		*line;
-	int			k;
-	int			p;
+	size_t		nb;
+	size_t		width;
 
 	if (!mlx)
 		ZOMG;
@@ -42,15 +30,12 @@ static t_mlx				*output_grid(t_mlx *mlx)
 	if (mlx->map_x > 100 || mlx->map_y > 100)
 		ft_fatal("map size isn't supported by visualizer");
 	ft_strdel(&line);
-	EPICFAILZ(color_squares(get_sqrlen(mlx)), NULL);
-	k = -1;
-	while (++k < mlx->map_y)
-	{
-		p = -1;
-		while (++p < mlx->map_x)
-			mlx_put_image_to_window(_MLX, _WIN, mlx->bsqr, _PADX + _ADJUST(p),\
-				_PADY + _ADJUST(k));
-	}
+	nb = MAX(mlx->map_x, mlx->map_y);
+	width = WIN_X / 2;
+	mlx->sqrlen = (width - (nb - 1)) / nb;
+	mlx->pad_x = (width - ((mlx->map_x * mlx->sqrlen) + mlx->map_x - 1)) / 2;
+	mlx->pad_y = (width - ((mlx->map_y * mlx->sqrlen) + mlx->map_y - 1)) / 2;
+	EPICFAILZ(color_squares(mlx), NULL);
 	GIMME(mlx);
 }
 
@@ -77,28 +62,55 @@ static t_mlx				*do_players(t_mlx *mlx)
 	}
 	*ft_strchr(&p1n[0], '.') = '\0';
 	*ft_strchr(&p2n[0], '.') = '\0';
-//	mlx_string_put(_MLX, _WIN, _PX, _P1Y, _P1C, p1n);
-//	mlx_string_put(_MLX, _WIN, _PX, _P2Y, _P2C, p2n);
+	EPICFAILZ(do_font(mlx), NULL);
+	GIMME((t_mlx *)put_swstr(put_swstr(put_swstr(put_swstr(mlx, p1n, _P1X,\
+		_PY), p2n, _P2X, _PY), "0", _P1S, _PXS), "0", _P2S, _PXS));
 	GIMME(mlx);
 }
 
-int							main(void)
+static inline int			usage(void)
 {
-	int			k;
-	int			p;
-	t_mlx		*mlx;
+	ft_putendl("Usage: <filler command> | ./visualizer/visualizer [-low]\n"\
+		"-low: use 1200x675 resolution");
+	KTHXBYE;
+}
+
+static inline void			display_board(t_mlx *mlx, int x, int y)
+{
 	void		*xpm;
 
-	if (!(mlx = (t_mlx *)ft_memalloc(sizeof(t_mlx))) || !(_MLX = mlx_init())
-		|| (!(_WIN = mlx_new_window(_MLX, WIN_X, WIN_Y, _TITLE))))
-		ft_fatal("allocation failed.");
-	if (!(xpm = mlx_xpm_file_to_image(_MLX, _MAP_FILE, &k, &p)))
+	mlx->win_x = x;
+	mlx->win_y = y;
+	if (!(xpm = mlx_xpm_file_to_image(_MLX, _MAP_FILE, &x, &y)))
 		ft_fatal("could not locate xpm file, restart from filler directory");
 	mlx_put_image_to_window(_MLX, _WIN, xpm, 0, 0);
-	if (!output_grid(do_players(mlx)) || init_map(mlx) < 0)
+	if (!output_grid(do_players(mlx)))
 		ft_fatal("allocation failed.");
+	mlx_destroy_image(_MLX, xpm);
+}
+
+int							main(int argc, const char *argv[])
+{
+	int			x;
+	int			y;
+	t_mlx		*mlx;
+
+	if (argc > 1)
+	{
+		if (ft_strequ(argv[1], "-low"))
+			x = 1200;
+		else
+			GIMME(usage());
+	}
+	else
+		x = 1920;
+	y = (x == 1920 ? 1080 : 675);
+	if (!(mlx = (t_mlx *)ft_memalloc(sizeof(t_mlx))) || !(_MLX = mlx_init())
+		|| (!(_WIN = mlx_new_window(_MLX, x, y, _TITLE))))
+		ft_fatal("allocation failed.");
+	display_board(mlx, x, y);
+	mlx_mouse_hook(_WIN, &hook_mouse, mlx);
 	mlx_key_hook(_WIN, &hook_key, mlx);
 	mlx_loop_hook(_MLX, &hook_loop, mlx);
-	mlx_loop(_MLX);
-	KTHXBYE;
+	GIMME(mlx_loop(_MLX));
 }
