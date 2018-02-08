@@ -6,13 +6,12 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 19:26:56 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/03 18:24:05 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/08 16:58:07 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/filler.h"
 
-#define E_CLEAR (mov->anchor < 2 && mov->hit == false)
 #define TICX (crd->x + crd->p - data->plox)
 #define TICY (crd->y + crd->k - data->ploy)
 #define TILE data->map[TICY][TICX]
@@ -55,10 +54,10 @@ void						test_fit(t_data *data, t_mov *mov, t_crd *crd)
 	mov->contact = 0;
 	mov->reach = 0;
 	crd->k = data->ploy - 1;
-	while (E_CLEAR && ++crd->k < data->ply)
+	while (mov->anchor < 2 && mov->hit == false && ++crd->k < data->ply)
 	{
 		crd->p = data->plox - 1;
-		while (E_CLEAR && ++crd->p < data->plx)
+		while (mov->anchor < 2 && mov->hit == false && ++crd->p < data->plx)
 			check_move(data, mov, crd);
 	}
 	if (mov->hit == false && mov->anchor == 1 && (mov->contact > mov->prio
