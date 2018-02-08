@@ -6,13 +6,17 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 15:29:27 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/08 12:03:03 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/08 15:16:38 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/visualizer.h"
 #define _MAP "./visualizer/ressources/assets/map.xpm"
 #define _MAP_SMALL "./visualizer/ressources/assets/map_small.xpm"
+#define _PLAY "./visualizer/ressources/assets/PlayLarge.xpm"
+#define _PLAY_SMALL "./visualizer/ressources/assets/PlaySmall.xpm"
+#define _PAUSE "./visualizer/ressources/assets/PauseLarge.xpm"
+#define _PAUSE_SMALL "./visualizer/ressources/assets/PauseSmall.xpm"
 #define _TITLE "Filler visualizer, by nfinkel and fsabatie"
 #define BUFF_SIZE 16
 
@@ -51,8 +55,8 @@ static inline t_mlx			*display_players(t_mlx *mlx, const char *p1n,
 	py = (WIN_X == 1920 ? 225 : 140);
 	put_swstr(mlx, p1n, p1x, py);
 	put_swstr(mlx, p2n, p2x, py);
-	put_swstr(mlx, "0", _P1S, _PYS);
-	put_swstr(mlx, "0", _P2S, _PYS);
+	put_swstr(mlx, "0", _P1SCORE, _PYSCORE);
+	put_swstr(mlx, "0", _P2SCORE, _PYSCORE);
 	GIMME(mlx);
 }
 
@@ -99,6 +103,10 @@ static inline void			display_board(t_mlx *mlx, int x, int y)
 	if (!output_grid(do_players(mlx)))
 		ft_fatal("allocation failed");
 	mlx_destroy_image(_MLX, xpm);
+	path = (WIN_X == 1920 ? _PLAY : _PLAY_SMALL);
+	mlx->bplay = mlx_xpm_file_to_image(_MLX, path, &x, &y);
+	path = (WIN_X == 1920 ? _PAUSE : _PAUSE_SMALL);
+	mlx->bpause = mlx_xpm_file_to_image(_MLX, path, &x, &y);
 }
 
 int							main(int argc, const char *argv[])
@@ -119,6 +127,7 @@ int							main(int argc, const char *argv[])
 		|| (!(_WIN = mlx_new_window(_MLX, x, y, _TITLE))))
 		ft_fatal("allocation failed");
 	display_board(mlx, x, y);
+	mlx_put_image_to_window(_MLX, _WIN, mlx->bpause, 0, 0);
 	mlx_mouse_hook(_WIN, &hook_mouse, mlx);
 	mlx_key_hook(_WIN, &hook_key, mlx);
 	mlx_loop_hook(_MLX, &hook_loop, mlx);

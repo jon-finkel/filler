@@ -6,11 +6,12 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 18:49:45 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/08 11:51:23 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/08 15:25:11 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/visualizer.h"
+#define _GET_ADDR(x) mlx_get_data_addr((x), &mlx->bppx, &mlx->sl, &mlx->endian)
 
 static inline void			big_endian(char **aptr, int color, const int x,
 							const int y)
@@ -42,7 +43,7 @@ static inline void			little_endian(char **aptr, int color, const int x,
 	++*aptr;
 }
 
-static inline void			do_colors(const t_mlx *mlx, char *ptr, int color)
+static void					do_square(const t_mlx *mlx, char *ptr, int color)
 {
 	int		k;
 	int		p;
@@ -70,18 +71,18 @@ static inline void			do_colors(const t_mlx *mlx, char *ptr, int color)
 	}
 }
 
-static inline void			do_clean(const t_mlx *mlx, char *ptr, const int x,
-							const int y)
+static void					do_rectangle(const t_mlx *mlx, char *ptr,
+							const int x, const int y)
 {
 	int				color;
 	int				k;
 	int				p;
 	static int		n = 0;
 
-	if (!n)
-		color = 0x1b0331;
-	else
+	if (n == 1 || n == 2)
 		color = (n == 1 ? _P1C : _P2C);
+	else
+		color = (!n ? 0x1b0331 : 0x22073a);
 	k = -1;
 	while (++k < y)
 	{
@@ -100,22 +101,18 @@ static inline void			do_clean(const t_mlx *mlx, char *ptr, const int x,
 int							color_squares(t_mlx *mlx)
 {
 	FAILZ(mlx->bsqr = mlx_new_image(_MLX, mlx->sqrlen, mlx->sqrlen), -1);
-	do_colors(mlx, mlx_get_data_addr(mlx->bsqr, &mlx->bppx, &mlx->sl,\
-		&mlx->endian), 0x2c2c2c);
+	do_square(mlx, _GET_ADDR(mlx->bsqr), 0x2c2c2c);
 	FAILZ(mlx->sqrp1 = mlx_new_image(_MLX, mlx->sqrlen, mlx->sqrlen), -1);
-	do_colors(mlx, mlx_get_data_addr(mlx->sqrp1, &mlx->bppx, &mlx->sl,\
-		&mlx->endian), _P1C);
+	do_square(mlx, _GET_ADDR(mlx->sqrp1), _P1C);
 	FAILZ(mlx->sqrp2 = mlx_new_image(_MLX, mlx->sqrlen, mlx->sqrlen), -1);
-	do_colors(mlx, mlx_get_data_addr(mlx->sqrp2, &mlx->bppx, &mlx->sl,\
-		&mlx->endian), _P2C);
+	do_square(mlx, _GET_ADDR(mlx->sqrp2), _P2C);
 	FAILZ(mlx->bg = mlx_new_image(_MLX, WIN_X / 2, WIN_X / 2), -1);
-	do_clean(mlx, mlx_get_data_addr(mlx->bg, &mlx->bppx, &mlx->sl,\
-		&mlx->endian), WIN_X / 2, WIN_X / 2);
+	do_rectangle(mlx, _GET_ADDR(mlx->bg), WIN_X / 2, WIN_X / 2);
 	FAILZ(mlx->clean1 = mlx_new_image(_MLX, 150, 30), -1);
-	do_clean(mlx, mlx_get_data_addr(mlx->clean1, &mlx->bppx, &mlx->sl,\
-		&mlx->endian), 150, 30);
+	do_rectangle(mlx, _GET_ADDR(mlx->clean1), 150, 30);
 	FAILZ(mlx->clean2 = mlx_new_image(_MLX, 150, 30), -1);
-	do_clean(mlx, mlx_get_data_addr(mlx->clean2, &mlx->bppx, &mlx->sl,\
-		&mlx->endian), 150, 30);
+	do_rectangle(mlx, _GET_ADDR(mlx->clean2), 150, 30);
+	FAILZ(mlx->bclean = mlx_new_image(_MLX, 100, 100), -1);
+	do_rectangle(mlx, _GET_ADDR(mlx->bclean), 100, 100);
 	KTHXBYE;
 }

@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 17:34:00 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/08 11:47:18 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/08 13:21:49 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ static inline int			output_score(t_mlx *mlx, const int p1s,
 	char		*s;
 
 	s = ft_itoa(p1s);
-	mlx_put_image_to_window(_MLX, _WIN, mlx->clean1, _P1S, _PYS);
-	put_swstr(mlx, s, _P1S, _PYS);
+	mlx_put_image_to_window(_MLX, _WIN, mlx->clean1, _P1SCORE, _PYSCORE);
+	put_swstr(mlx, s, _P1SCORE, _PYSCORE);
 	free(s);
 	s = ft_itoa(p2s);
-	mlx_put_image_to_window(_MLX, _WIN, mlx->clean2, _P2S, _PYS);
-	put_swstr(mlx, s, _P2S, _PYS);
+	mlx_put_image_to_window(_MLX, _WIN, mlx->clean2, _P2SCORE, _PYSCORE);
+	put_swstr(mlx, s, _P2SCORE, _PYSCORE);
 	ft_strdel(&s);
 	KTHXBYE;
 }

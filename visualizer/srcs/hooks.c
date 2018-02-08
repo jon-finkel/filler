@@ -6,24 +6,31 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/04 17:15:39 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/08 11:42:41 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/08 15:34:30 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/visualizer.h"
 #define _LIGHT "./visualizer/ressources/assets/LSWLarge.xpm"
 #define _DARK "./visualizer/ressources/assets/DSWLarge.xpm"
-#define _TIE "./visualizer/ressources/assets/" //TODO
+#define _TIE "./visualizer/ressources/assets/"
 #define _LIGHT_SMALL "./visualizer/ressources/assets/LSWSmall.xpm"
 #define _DARK_SMALL "./visualizer/ressources/assets/DSWSmall.xpm"
-#define _TIE_SMALL "./visualizer/ressources/assets/" //TODO
+#define _TIE_SMALL "./visualizer/ressources/assets/"
+#define _PAUSE mlx->bpause
+#define _PLAY mlx->bplay
 
 int							hook_key(int key, t_mlx *mlx)
 {
 	if (key == MLX_KEY_ESCAPE)
 		exit(EXIT_SUCCESS);
 	else if (key == MLX_KEY_SPACE && mlx->mouse)
+	{
+		mlx_put_image_to_window(_MLX, _WIN, mlx->bclean, WIN_X / 2 - 50,\
+			WIN_X / 2 + 5);
+		mlx_put_image_to_window(_MLX, _WIN, mlx->play ? _PAUSE: _PLAY, 0, 0);
 		mlx->play = (mlx->play == false ? true : false);
+	}
 	KTHXBYE;
 }
 
@@ -69,11 +76,9 @@ int							hook_loop(t_mlx *mlx)
 	{
 		if ((ret = get_next_line(STDIN_FILENO, &line)) < 0)
 			ft_fatal("allocation failed");
-		else if (line[0] == ' ')
-		{
-			if (do_map(mlx, &mlx->p1score, &mlx->p2score) == -1)
-				ft_fatal("allocation failed");
-		}
+		else if (line[0] == ' '
+			&& do_map(mlx, &mlx->p1score, &mlx->p2score) == -1)
+			ft_fatal("allocation failed");
 		else if (!ret && (end = true))
 			do_winner(mlx);
 		ft_strdel(&line);

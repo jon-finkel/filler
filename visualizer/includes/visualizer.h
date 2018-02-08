@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 15:23:16 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/08 11:51:52 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/08 15:20:13 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@
 # define _WIN mlx->win_ptr
 # define _P1C 0x2e99e3
 # define _P2C 0xb71345
-# define _P1S (WIN_X == 1920 ? 155 : 95)
-# define _P2S (WIN_X == 1920 ? 1555 : 990)
-# define _PYS (WIN_X == 1920 ? 820 : 510)
+# define _P1SCORE (WIN_X == 1920 ? 155 : 95)
+# define _P2SCORE (WIN_X == 1920 ? 1555 : 990)
+# define _PYSCORE (WIN_X == 1920 ? 820 : 510)
 
 typedef struct		s_mlx
 {
@@ -52,7 +52,10 @@ typedef struct		s_mlx
 		uint8_t		__pad_x;
 		uint8_t		__pad_y;
 	}				__win;
+	void			*bclean;
 	void			*bg;
+	void			*bplay;
+	void			*bpause;
 	void			*bsqr;
 	void			*clean1;
 	void			*clean2;
