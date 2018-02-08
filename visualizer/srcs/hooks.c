@@ -6,17 +6,15 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/04 17:15:39 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/08 15:34:30 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/08 15:50:44 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/visualizer.h"
 #define _LIGHT "./visualizer/ressources/assets/LSWLarge.xpm"
 #define _DARK "./visualizer/ressources/assets/DSWLarge.xpm"
-#define _TIE "./visualizer/ressources/assets/"
 #define _LIGHT_SMALL "./visualizer/ressources/assets/LSWSmall.xpm"
 #define _DARK_SMALL "./visualizer/ressources/assets/DSWSmall.xpm"
-#define _TIE_SMALL "./visualizer/ressources/assets/"
 #define _PAUSE mlx->bpause
 #define _PLAY mlx->bplay
 
@@ -53,10 +51,8 @@ static inline void			do_winner(t_mlx *mlx)
 
 	if (mlx->p1score > mlx->p2score)
 		path = (WIN_X == 1920 ? _LIGHT : _LIGHT_SMALL);
-	else if (mlx->p1score < mlx->p2score)
-		path = (WIN_X == 1920 ? _DARK : _DARK_SMALL);
 	else
-		path = (WIN_X == 1920 ? _TIE : _TIE_SMALL);
+		path = (WIN_X == 1920 ? _DARK : _DARK_SMALL);
 	xpm = mlx_xpm_file_to_image(_MLX, path, &x, &y);
 	mlx_put_image_to_window(_MLX, _WIN, xpm, 0, 0);
 }
