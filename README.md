@@ -2,7 +2,7 @@
 
 Algorithm project with graphical interface.
 
-![](https://github.com/jon-finkel/ft_select/blob/master/visu.gif)
+![](https://github.com/jon-finkel/filler/blob/master/visu.gif)
 
 ## About
 
