@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 17:34:00 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/05 20:58:55 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/08 11:47:18 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 inline int					init_map(const t_mlx *mlx)
 {
-	char			*line;
-	int				k;
-	int				p;
+	char		*line;
+	int			k;
+	int			p;
 
 	k = -2;
 	while (++k < mlx->map_y)
@@ -26,27 +26,25 @@ inline int					init_map(const t_mlx *mlx)
 		p = -1;
 		while (++p < mlx->map_x)
 			if (line[p + 4] == 'O' || line[p + 4] == 'X')
-				_DO_TILE((line[p + 4] == 'O' ? _P1 : _P2),\
+				_DO_TILE((line[p + 4] == 'O' ? mlx->sqrp1 : mlx->sqrp2),\
 					_PADX + _ADJUST(p), _PADY + _ADJUST(k));
 		ft_strdel(&line);
 	}
 	KTHXBYE;
 }
 
-static inline int			output_score(const t_mlx *mlx, const int p1s,
+static inline int			output_score(t_mlx *mlx, const int p1s,
 							const int p2s)
 {
 	char		*s;
 
-// A faire, le calcule du score est correct, juste a l'afficher
-(void)mlx;
 	s = ft_itoa(p1s);
-//	mlx_put_image_to_window(_MLX, _WIN, mlx->clean, WIN_X - 90, _P1Y);
-//	mlx_string_put(_MLX, _WIN, WIN_X - 90, _P1Y, _P1C, s);
+	mlx_put_image_to_window(_MLX, _WIN, mlx->clean1, _P1S, _PYS);
+	put_swstr(mlx, s, _P1S, _PYS);
 	free(s);
 	s = ft_itoa(p2s);
-//	mlx_put_image_to_window(_MLX, _WIN, mlx->clean, WIN_X - 90, _P2Y);
-//	mlx_string_put(_MLX, _WIN, WIN_X - 90, _P2Y, _P2C, s);
+	mlx_put_image_to_window(_MLX, _WIN, mlx->clean2, _P2S, _PYS);
+	put_swstr(mlx, s, _P2S, _PYS);
 	ft_strdel(&s);
 	KTHXBYE;
 }
@@ -67,12 +65,12 @@ int							do_map(t_mlx *mlx, int *p1score, int *p2score)
 		while (++p < mlx->map_x)
 			if (line[p + 4] == 'o' || line[p + 4] == 'x')
 			{
-				_DO_TILE((line[p + 4] == 'o' ? _P1 : _P2),\
+				_DO_TILE((line[p + 4] == 'o' ? mlx->sqrp1 : mlx->sqrp2),\
 					_PADX + _ADJUST(p), _PADY + _ADJUST(k));
 				if (score == false && line[p + 4] == 'o' && (score = true))
-					++*p1score;
+					++mlx->p1score;
 				else if (score == false && (score = true))
-					++*p2score;
+					++mlx->p2score;
 			}
 		ft_strdel(&line);
 	}

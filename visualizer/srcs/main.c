@@ -6,15 +6,15 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 15:29:27 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/06 16:03:32 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/08 12:03:03 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/visualizer.h"
-#define _MAP_FILE "./ressources/map.xpm" // Cette ligne marche chez nfinkel.
-//#define _MAP_FILE "visualizer/ressources/map.xpm" // Cette ligne marche chez fsabatie.
+#define _MAP "./visualizer/ressources/assets/map.xpm"
+#define _MAP_SMALL "./visualizer/ressources/assets/map_small.xpm"
 #define _TITLE "Filler visualizer, by nfinkel and fsabatie"
-#define BUFF_SIZE 32
+#define BUFF_SIZE 16
 
 static t_mlx				*output_grid(t_mlx *mlx)
 {
@@ -39,6 +39,23 @@ static t_mlx				*output_grid(t_mlx *mlx)
 	GIMME(mlx);
 }
 
+static inline t_mlx			*display_players(t_mlx *mlx, const char *p1n,
+							const char *p2n)
+{
+	int		p1x;
+	int		p2x;
+	int		py;
+
+	p1x = (WIN_X == 1920 ? 120 : 90);
+	p2x = (WIN_X == 1920 ? 1560 : 980);
+	py = (WIN_X == 1920 ? 225 : 140);
+	put_swstr(mlx, p1n, p1x, py);
+	put_swstr(mlx, p2n, p2x, py);
+	put_swstr(mlx, "0", _P1S, _PYS);
+	put_swstr(mlx, "0", _P2S, _PYS);
+	GIMME(mlx);
+}
+
 static t_mlx				*do_players(t_mlx *mlx)
 {
 	char		p1n[BUFF_SIZE];
@@ -60,32 +77,27 @@ static t_mlx				*do_players(t_mlx *mlx)
 			ft_fatal("wrong input");
 		ft_strdel(&line);
 	}
-	*ft_strchr(&p1n[0], '.') = '\0';
-	*ft_strchr(&p2n[0], '.') = '\0';
+	if ((line = ft_strchr(&p1n[0], '.')))
+		*line = '\0';
+	if ((line = ft_strchr(&p2n[0], '.')))
+		*line = '\0';
 	EPICFAILZ(do_font(mlx), NULL);
-	GIMME((t_mlx *)put_swstr(put_swstr(put_swstr(put_swstr(mlx, p1n, _P1X,\
-		_PY), p2n, _P2X, _PY), "0", _P1S, _PXS), "0", _P2S, _PXS));
-	GIMME(mlx);
-}
-
-static inline int			usage(void)
-{
-	ft_putendl("Usage: <filler command> | ./visualizer/visualizer [-low]\n"\
-		"-low: use 1200x675 resolution");
-	KTHXBYE;
+	GIMME(display_players(mlx, p1n, p2n));
 }
 
 static inline void			display_board(t_mlx *mlx, int x, int y)
 {
+	char		*path;
 	void		*xpm;
 
-	mlx->win_x = x;
-	mlx->win_y = y;
-	if (!(xpm = mlx_xpm_file_to_image(_MLX, _MAP_FILE, &x, &y)))
+	WIN_X = x;
+	WIN_Y = y;
+	path = (WIN_X == 1920 ? _MAP : _MAP_SMALL);
+	if (!(xpm = mlx_xpm_file_to_image(_MLX, path, &x, &y)))
 		ft_fatal("could not locate xpm file, restart from filler directory");
 	mlx_put_image_to_window(_MLX, _WIN, xpm, 0, 0);
 	if (!output_grid(do_players(mlx)))
-		ft_fatal("allocation failed.");
+		ft_fatal("allocation failed");
 	mlx_destroy_image(_MLX, xpm);
 }
 
@@ -95,19 +107,17 @@ int							main(int argc, const char *argv[])
 	int			y;
 	t_mlx		*mlx;
 
-	if (argc > 1)
-	{
-		if (ft_strequ(argv[1], "-low"))
-			x = 1200;
-		else
-			GIMME(usage());
-	}
+	if (argc > 1 && (ft_strequ(argv[1], "--low") || ft_strequ(argv[1], "-l")))
+		x = 1200;
+	else if (argc > 1)
+		GIMME(ft_printf("Usage: <filler command> | ./visualizer/visualizer "\
+			"[-l]\n-l  --low: use 1200x675 resolution\n"));
 	else
 		x = 1920;
 	y = (x == 1920 ? 1080 : 675);
 	if (!(mlx = (t_mlx *)ft_memalloc(sizeof(t_mlx))) || !(_MLX = mlx_init())
 		|| (!(_WIN = mlx_new_window(_MLX, x, y, _TITLE))))
-		ft_fatal("allocation failed.");
+		ft_fatal("allocation failed");
 	display_board(mlx, x, y);
 	mlx_mouse_hook(_WIN, &hook_mouse, mlx);
 	mlx_key_hook(_WIN, &hook_key, mlx);

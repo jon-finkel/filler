@@ -6,7 +6,7 @@
 #    By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/01 15:25:26 by nfinkel           #+#    #+#              #
-#    Updated: 2018/02/06 08:39:30 by nfinkel          ###   ########.fr        #
+#    Updated: 2018/02/08 11:20:13 by nfinkel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,7 +73,7 @@ clean:
 	@printf  "\033[1:32mCleaning object files -> \033[91m$(NAME)\033[0m\033[1:32m:\033[0m%-10s\033[32m[✔]\033[0m\n"
 
 debug: CC := clang
-debug: DEBUG := -g3 -fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined
+debug: DEBUG := -g3 -fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined 
 debug: FLAGS :=
 debug: fclean all
 

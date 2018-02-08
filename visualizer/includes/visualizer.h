@@ -6,7 +6,7 @@
 /*   By: nfinkel <nfinkel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 15:23:16 by nfinkel           #+#    #+#             */
-/*   Updated: 2018/02/06 15:42:44 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/08 11:51:52 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,19 @@
 # define _PADX WIN_X / 4 + mlx->pad_x
 # define _PADY mlx->pad_y
 # define _MLX mlx->mlx
-# define _SQR mlx->bsqr
-# define _P1 mlx->sqrp1
-# define _P2 mlx->sqrp2
 # define _WIN mlx->win_ptr
-# define _P1X 130
-# define _P2X 1560
-# define _PY 225
 # define _P1C 0x2e99e3
-# define _P2C 0xe1225d
-# define _P1S 280
-# define _P2S 1640
-# define _PXS 830
+# define _P2C 0xb71345
+# define _P1S (WIN_X == 1920 ? 155 : 95)
+# define _P2S (WIN_X == 1920 ? 1555 : 990)
+# define _PYS (WIN_X == 1920 ? 820 : 510)
 
 typedef struct		s_mlx
 {
 	bool			mouse;
 	bool			play;
+	int				p1score;
+	int				p2score;
 	struct			s_sqr
 	{
 		int			__bppx;
@@ -47,18 +43,22 @@ typedef struct		s_mlx
 		int			__endian;
 		int			__sqrlen;
 	}				__sqr;
-	short			win_x;
-	short			win_y;
-	uint8_t			map_x;
-	uint8_t			pad_x;
-	uint8_t			map_y;
-	uint8_t			pad_y;
+	struct			s_window
+	{
+		short		__win_x;
+		short		__win_y;
+		uint8_t		__map_x;
+		uint8_t		__map_y;
+		uint8_t		__pad_x;
+		uint8_t		__pad_y;
+	}				__win;
 	void			*bg;
 	void			*bsqr;
-	void			*clean;
+	void			*clean1;
+	void			*clean2;
+	void			*mlx;
 	void			*sqrp1;
 	void			*sqrp2;
-	void			*mlx;
 	void			*win_ptr;
 	void			**font;
 }					t_mlx;
@@ -67,6 +67,12 @@ typedef struct		s_mlx
 #define endian __sqr.__endian
 #define sl __sqr.__sl
 #define sqrlen __sqr.__sqrlen
+#define win_x __win.__win_x
+#define win_y __win.__win_y
+#define map_x __win.__map_x
+#define map_y __win.__map_y
+#define pad_x __win.__pad_x
+#define pad_y __win.__pad_y
 
 int					color_squares(t_mlx *mlx);
 int					do_font(t_mlx *mlx);
