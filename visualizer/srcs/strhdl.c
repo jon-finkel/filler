@@ -6,7 +6,7 @@
 /*   By: fsabatie <fsabatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 15:29:27 by fsabatie          #+#    #+#             */
-/*   Updated: 2018/02/08 11:59:54 by nfinkel          ###   ########.fr       */
+/*   Updated: 2018/02/10 15:26:06 by nfinkel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #define _SPATH "./visualizer/ressources/letters/small/"
 #define BUFF_SIZE 512
 
-t_vector				g_vec_null = {NULL, 0, 0, sizeof(char *)};
+t_vector				g_vec_null = {NULL, 0, 0, sizeof(void *)};
 t_vector				*g_vec = &g_vec_null;
 
 /*
