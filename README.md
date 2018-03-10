@@ -46,7 +46,7 @@ Use -l (--low) option for the visualizer to display as a lower 1200x675 resoluti
 
 ## Final Mark
 
-`125/100`
+`125/100 (MAX GRADE)`
 
 [1]: http://42.fr "42 Paris"
 [2]: https://github.com/jon-finkel/filler/blob/master/project_instructions/filler.en.pdf "filler"
