@@ -27,7 +27,7 @@ A visualizer made with the minilibx (a graphical library made for our graphical 
 
 ## Installation
 
-`cd libft ; git pull origin master ; cd .. ; make`
+`cd libft ; git submodule init ; git submodule update ; cd .. ; make`
 
 ## Running
 
